@@ -1,2 +1,9 @@
-﻿using S10258596G_PRG2Assignment_Dallas;
+﻿using classes;
 
+class Program
+{
+    public static void Main(string[] args)
+    {
+        
+    }
+}
