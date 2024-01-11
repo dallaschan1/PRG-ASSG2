@@ -202,7 +202,7 @@ namespace Assignment2
                             else if (specialFlavor.Contains(flavor))
                             {
                                 flavorsWanted.Add(flavor);
-                                number += 2; // This line increases the 'number' variable by 2 for special flavors.
+                                number += 2;
                             }
                             else
                             {
