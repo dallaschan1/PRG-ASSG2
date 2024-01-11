@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace classes
+namespace Assignment2
 {
     internal class Customer
     {

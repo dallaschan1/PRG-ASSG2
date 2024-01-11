@@ -1,9 +1,12 @@
-﻿using classes;
+﻿using System;
 
-class Program
+namespace Assignment2
 {
-    public static void Main(string[] args)
+    class Program
     {
-        
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
     }
 }
