@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,7 +123,7 @@ namespace Assignment2
     {
         public int id;
         public DateTime timeRecieved {  get; set; }
-        public DateTime? timeFulfilled { get; set}
+        public DateTime? timeFulfilled { get; set;  }
         public List<IceCream> iceCreamList {  get; set; } = new List<IceCream> ();
 
         public Order()
@@ -139,9 +140,106 @@ namespace Assignment2
         public void ModifyIceCream(int iceCream)
         {
             IceCream modifiedIceCream = iceCreamList[iceCream];
-            Console.log("Type of Ice Cream [waffle, cone, cup]: ");
-            string type = Console.ReadLine ();
-            if t
+            List<string> normalFlavor = new List<string>() { "vanilla", "chocolate", "strawberry"};
+            List<string> specialFlavor = new List<string>() { "durian", "ube", "sea salt" };
+            List<string> flavorsWanted = new List<string> ();
+            int flavorMoney = 0;
+            
+            
+
+            while (true)
+            {
+                Console.WriteLine("Type of Ice Cream [waffle, cone, cup]: ");
+                string type = Console.ReadLine().ToLower();
+                if ((type == "waffle") || (type == "cone") || (type == "cup"))
+                {
+                    int number = 0;
+                    Console.Write("How many scoops do you want? (Single, Double or Triple): ");
+                    if (Console.ReadLine().ToLower() == "single")
+                    {
+                        number = 1;
+                    }
+                    else if(Console.ReadLine().ToLower() == "double")
+                    {
+                        number = 2;
+                    }
+                    else if (Console.ReadLine().ToLower() == "triple")
+                    {
+                        number = 3;
+                    }
+                    
+                    while (number > 3 || number < 1)
+                    {
+                        Console.WriteLine("Please enter the values (Single, Double or Triple).");
+                        Console.Write("How many scoops do you want? (1 - 3): ");
+                        if (Console.ReadLine().ToLower() == "single")
+                        {
+                            number = 1;
+                        }
+                        else if (Console.ReadLine().ToLower() == "double")
+                        {
+                            number = 2;
+                        }
+                        else if (Console.ReadLine().ToLower() == "triple")
+                        {
+                            number = 3;
+                        }
+                    }
+                    for (int i = 0; i < number; i++)
+                    {
+                        string flavor;
+
+                        
+                        do
+                        {
+                            Console.Write($"Scoop {i + 1}, what flavor would you like? Regular Flavors: (Vanilla, Chocolate, Strawberry), Premium Flavors: (Durian, Sea salt, Ube): ");
+                            flavor = Console.ReadLine().ToLower();
+
+                            if (normalFlavor.Contains(flavor))
+                            {
+                                flavorsWanted.Add(flavor);
+                            }
+                            else if (specialFlavor.Contains(flavor))
+                            {
+                                flavorsWanted.Add(flavor);
+                                number += 2; // This line increases the 'number' variable by 2 for special flavors.
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: Invalid flavor. Please choose a valid flavor.");
+                            }
+                        }
+                        while (!normalFlavor.Contains(flavor) && !specialFlavor.Contains(flavor));
+
+
+
+                    }
+
+                    
+                       
+                   
+
+
+                }
+                if (type == "waffle")
+                {
+                    
+             
+                }
+                else if (type == "cone")
+                {
+            
+                }
+                else if (type == "cup")
+                {
+                    
+                }
+                else
+                {
+                    Console.WriteLine("Please enter either \"Waffle\", \"Cone\" or \"Cup\". ");
+                    continue;
+                }
+            }
 
         }
 
