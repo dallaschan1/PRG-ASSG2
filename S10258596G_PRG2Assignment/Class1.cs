@@ -120,6 +120,30 @@ namespace classes
 
     internal class Order
     {
-            
+        public int id;
+        public DateTime timeRecieved {  get; set; }
+        public DateTime? timeFulfilled { get; set}
+        public List<IceCream> iceCreamList {  get; set; } = new List<IceCream> ();
+
+        public Order()
+        {
+
+        }
+
+        public Order (int id, DateTime timeRecieved)
+        {
+            this.id = id;
+            this.timeRecieved = timeRecieved;
+        }
+
+        public void ModifyIceCream(int iceCream)
+        {
+            IceCream modifiedIceCream = iceCreamList[iceCream];
+            Console.log("Type of Ice Cream [waffle, cone, cup]: ");
+            string type = Console.ReadLine ();
+            if t
+
+        }
+
     }
 }
