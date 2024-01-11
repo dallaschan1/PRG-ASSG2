@@ -23,7 +23,7 @@ namespace Assignment2
 
         public override string ToString()
         {
-            return;
+            return $"Type: {Type} \tPremium: {Premium} \tQuantity: {Quantity}";
         }
     }
 }

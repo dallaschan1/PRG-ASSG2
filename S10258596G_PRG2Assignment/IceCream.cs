@@ -13,7 +13,11 @@ namespace Assignment2
         public List<Flavour> Flavours { get; set; }
         public List<Topping> Toppings { get; set; }
 
-        public IceCream() { }
+        public IceCream() 
+        {
+            List<Flavour> Flavours = new List<Flavour>();
+            List<Topping> Toppings = new List<Topping>();
+        }
 
         public IceCream(string option, int scoops, List<Flavour> flavours, List<Topping> toppings)
         {
@@ -34,12 +38,14 @@ namespace Assignment2
             }
 
             string toppings = "";
-            foreach (Toppings topping in Toppings)
+            foreach (Topping topping in Toppings)
             {
                 toppings += topping + "  ";
             }
 
             string output = $"Option: {Option} \tScopps: {Scoops} \tFlavours: {Flavours} \tToppings: {Toppings}";
+
+            return output;
         }
     }
 }
