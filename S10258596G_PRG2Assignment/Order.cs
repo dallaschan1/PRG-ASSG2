@@ -44,6 +44,16 @@ namespace Assignment2
             }
         }
 
+        public double CalculateTotal()
+        {
+            double total = 0;
+            foreach (IceCream iceCream in iceCreamList)
+            {
+                total += iceCream.CalculatePrice();
+            }
+            return total;
+        }
+
 
         public void ModifyIceCream(int iceCream)
         {
@@ -64,14 +74,22 @@ namespace Assignment2
                 {
                     Console.Write(prompt);
                     response = Console.ReadLine().ToLower();
+
+                    if (string.IsNullOrWhiteSpace(response))
+                    {
+                        Console.WriteLine("Input cannot be blank. Please try again.");
+                        continue;
+                    }
+
                     if (!validResponses.Contains(response))
                     {
                         Console.WriteLine("Invalid input. Please try again.");
                     }
                 }
-                while (!validResponses.Contains(response));
+                while (string.IsNullOrWhiteSpace(response) || !validResponses.Contains(response));
                 return response;
             }
+
 
             int GetNumberOfScoops()
             {
