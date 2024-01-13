@@ -12,7 +12,7 @@ namespace Assignment2
 
         public Cone() { }
 
-        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool dipped) : base("Cone", scoops, flavours, toppings)
+        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool dipped) : base(option, scoops, flavours, toppings)
         {
             Dipped = dipped;
         }

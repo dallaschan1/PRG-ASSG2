@@ -10,7 +10,7 @@ namespace Assignment2
     {
         public Cup() { }
 
-        public Cup(string option, int scoops, List<Flavour> flavours, List<Topping> toppings) : base("Cup", scoops, flavours, toppings) { }
+        public Cup(string option, int scoops, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings) { }
 
         public override double CalculatePrice()
         {
