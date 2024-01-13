@@ -18,7 +18,7 @@ namespace Assignment2
         {
             points = 0;
             punchCard = 0;
-
+            tier = "Ordinary";
         }
 
         public PointCard(int points, int punchCard)
