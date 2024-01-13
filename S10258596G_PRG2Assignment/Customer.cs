@@ -17,11 +17,14 @@ namespace Assignment2
 
         public Order currentOrder { get; set; }
 
-        public List<Order> orderHistory { get; set; } = new List<Order>();
+        public List<Order> orderHistory { get; set; }
 
         public PointCard rewards { get; set; }
 
-        public Customer() { }
+        public Customer() 
+        {
+            orderHistory = new List<Order>();
+        }
 
         public Customer(string name, int memberId, DateTime dob)
         {
