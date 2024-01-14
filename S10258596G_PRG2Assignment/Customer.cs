@@ -10,6 +10,7 @@ namespace Assignment2
     internal class Customer
     {
         public string name { get; set; }
+
         public int memberId { get; set; }
 
         public DateTime dob { get; set; }
@@ -38,6 +39,8 @@ namespace Assignment2
         public Order MakeOrder()
         {
             Order order = new Order();
+            currentOrder = order;
+            orderHistory.Add(order);
 
             return order;
         }
@@ -60,14 +63,23 @@ namespace Assignment2
 
         public override string ToString()
         {
-            return $"{name}, {memberId}, {dob}";
+            string currentOrderString = currentOrder != null ? "Currently Ordering: Yes" : "Currently Ordering: No";
+
+           
+            string orderHistoryString = orderHistory != null ? $"Order History Count: {orderHistory.Count}" : "Order History: None";
+
+            string birthdayString = IsBirthday() ? "Today is their birthday!" : "Today is not their birthday.";
+
+            return $"Name: {name}, Member ID: {memberId}, Date of Birth: {dob.ToShortDateString()}, {currentOrderString}, {orderHistoryString}, {birthdayString}";
         }
 
+
+
     }
-    
 
 
-    
 
-    
+
+
+
 }

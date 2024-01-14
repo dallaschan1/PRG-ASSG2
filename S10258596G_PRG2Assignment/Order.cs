@@ -199,5 +199,21 @@ namespace Assignment2
 
         }
 
+        public override string ToString()
+        {
+            string timeFulfilledStr = timeFulfilled.HasValue ? timeFulfilled.Value.ToString() : "Not Fulfilled";
+
+            string iceCreamDetails = "";
+            foreach (IceCream iceCream in iceCreamList)
+            {
+                iceCreamDetails += iceCream.ToString() + "\n"; 
+            }
+
+            return $"Order ID: {id}, TimeReceived: {timeRecieved}, TimeFulfilled: {timeFulfilledStr}, Ice Creams: \n{iceCreamDetails}";
+        }
+
+
+
+
     }
 }

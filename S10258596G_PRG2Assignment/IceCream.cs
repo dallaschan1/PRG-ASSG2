@@ -43,7 +43,7 @@ namespace Assignment2
                 toppings += topping + "  ";
             }
 
-            string output = $"Option: {Option} \tScopps: {Scoops} \tFlavours: {Flavours} \tToppings: {Toppings}";
+            string output = $"Option: {Option} \tScopps: {Scoops} \tFlavours: {flavours} \tToppings: {toppings}";
 
             return output;
         }
