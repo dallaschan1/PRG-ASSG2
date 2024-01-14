@@ -105,11 +105,7 @@ namespace Assignment2
 
                     case 1:
                         // 1) List all customers - display the information of all the customers
-                        foreach (KeyValuePair<int, Customer> kvp in customerDic)
-                        {
-                            Console.WriteLine(kvp.Value.ToString());
-                        }
-                        break;
+                        break; // LEAVE THE BREAK!!!
 
                     case 2:
                         // 2) List all current orders - display the information of all current orders in both the gold members and regular queue
