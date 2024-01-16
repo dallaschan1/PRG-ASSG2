@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Xml.Linq;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Linq.Expressions;
 
 namespace Assignment2
 {
@@ -30,9 +32,12 @@ namespace Assignment2
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] details = s.Split(',');
-                        DateTime dob = DateTime.ParseExact(details[2], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime dob = DateTime.ParseExact(details[2], "d/M/yyyy", CultureInfo.InvariantCulture);
+                        PointCard pointCard = new PointCard(Int32.Parse(details[4]),Int32.Parse(details[5]));
                         Customer customerNew = new Customer(details[0], Convert.ToInt32(details[1]), dob);
+                        customerNew.rewards = pointCard;
                         customerDic.Add(customerNew.memberId, customerNew);
+
                     }
                 }
             }
@@ -95,7 +100,7 @@ namespace Assignment2
                         }
 
                         List<Topping> toppingList = new List<Topping>();
-                        for (int i = 12; i < 4+12; i++)
+                        for (int i = 11; i < 4+11; i++)
                         {
                             if (details[i] != null)
                             {
@@ -126,7 +131,7 @@ namespace Assignment2
 
                         Order orderNew = new Order(Convert.ToInt32(details[0]), timeReceived, timeFulfilled, iceCreamList);
                         // Finish creating order for customer
-                        int memberID = Int32.Parse(details[2]);
+                        int memberID = Int32.Parse(details[1]);
                         customerDic[memberID].orderHistory.Add(orderNew);
                     }
                 }
@@ -178,13 +183,13 @@ namespace Assignment2
             }
 
 
-            void ProcessOption(int option)
+            bool ProcessOption(int option)
             {
                 switch (option)
                 {
                     case 0:
                         Console.WriteLine("Thank you & Have a nice day! Bye bye");
-                        break;
+                        return true;
 
                     case 1:
                         // 1) List all customers - display the information of all the customers
@@ -201,6 +206,7 @@ namespace Assignment2
                         Option3();
                         break;
                     case 4:
+                        Option4();
                         break;
                     case 5:
                         Option5();
@@ -208,27 +214,31 @@ namespace Assignment2
                     case 6:
                         Option6();
                         break;
-
                 }
+                return false;
             }
 
             while (true)
             {
                 DisplayMenu();
                 int option = OptionValidation();
-                ProcessOption(option);
+                bool exit = ProcessOption(option);
+                if (exit)
+                {
+                    break;
+                }
             }
 
             void Option1()
             {
                 // 1) List all customers - display the information of all the customers
-                Console.WriteLine($"{"Name",-10} \t{"Member ID",-6} \t{"Date Of Birth",-10}");
+                Console.WriteLine($"{"Name",-10} \t{"Member ID",-6} \t{"Date Of Birth",-10} \t{"Tier",-8} \t{"Points",-6} \t{"PunchCard",-9}");
                 foreach (KeyValuePair<int, Customer> kvp in customerDic)
                 {
                     Customer customer = kvp.Value;
-                    Console.WriteLine($"{customer.name,-10} \t{customer.memberId,-6} \t\t{customer.dob.ToShortDateString(),-10}");
-                    Console.WriteLine();
+                    Console.WriteLine($"{customer.name,-10} \t{customer.memberId,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
                 }
+                Console.WriteLine();
             }
 
             void Option2()
@@ -248,42 +258,116 @@ namespace Assignment2
 
             void Option3()
             {
-/*
-3) Register a new customer
- prompt user for the following information for the customer: name, id number, date of birth
- create a customer object with the information given
- create a Pointcard object
- assign Pointcard object to the customer
- append the customer information to the customers.csv file
- display a message to indicate registration status
-*/
-// Haven't finish data validation and exception handling and the rest
-                Console.Write("Enter Customer Name; ");
-                string name = Console.ReadLine();
+                /*
+                3) Register a new customer
+                 prompt user for the following information for the customer: name, id number, date of birth
+                 create a customer object with the information given
+                 create a Pointcard object
+                 assign Pointcard object to the customer
+                 append the customer information to the customers.csv file
+                 display a message to indicate registration status
+                */
+                // Haven't finish data validation and exception handling and the rest
+                string name = "";
+                int id = 0;
+                DateTime dob;
 
-                Console.Write("Enter Customer ID: ");
-                int id = int.Parse(Console.ReadLine());
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Customer Name: ");
+                        name = Console.ReadLine();
 
-                Console.Write("Enter Customer Date Of Birth (dd/MM/yyyy): ");
-                DateTime dob = Convert.ToDateTime(Console.ReadLine());
+                        if (name == "")
+                        {
+                            Console.WriteLine("Name cannot be blank. Please enter a valid name.\n");
+                        }
+                        else if (!Regex.IsMatch(name, "^[a-zA-Z]+$"))
+                        {
+                            Console.WriteLine("Name cannot include numbers or special characters. Pleae enter a valid name.\n");
+                        }
+                        else { break; }
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
 
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Customer ID: ");
+                        string input = Console.ReadLine();
+                        if (input == "")
+                        {
+                            Console.WriteLine("CustomerID cannot be empty. Please try again.\n");
+                        }
+                        else
+                        {
+                            id = int.Parse(input);
+                            if (!Regex.IsMatch(input, @"^\d{6}$"))
+                            {
+                                Console.WriteLine("MemberID should be 6 numbers long.\n");
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    catch (FormatException ex)
+                    {
+                        Console.WriteLine("CustomerID cannot be include special characters or letters. Please try again.\n");
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+                }
+
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Customer Date Of Birth (dd/MM/yyyy): ");
+                        dob = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy", null);
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        // Input is not in the correct format
+                        Console.WriteLine("Invalid date format. Please enter the date in dd/MM/yyyy format.\n");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Other unexpected errors
+                        Console.WriteLine($"An error occurred: {ex.Message}\n");
+                    }
+                }
                 Customer newCustomer = new Customer(name, id, dob);
-                PointCard newPointCard = new PointCard();
-                newCustomer.rewards = newPointCard;
+                customerDic.Add(newCustomer.memberId, newCustomer);
 
-                string data = $"{name}, {id}, {dob.Date}";
+                string data = $"{name},{id},{dob.ToShortDateString()},{newCustomer.rewards.Tier},{newCustomer.rewards.Points},{newCustomer.rewards.PunchCard}";
 
                 using (StreamWriter sw = new StreamWriter("customers.csv", true))
                 {
                     sw.WriteLine(data);
                 }
-
-                Console.WriteLine("Registration Status: Successful!"); // Might need to shift it in the error handling part instead
+                Console.WriteLine("Registration Status: Successful!\n"); // Might need to shift it in the error handling part instead
             }
 
-            void option4()
+            void Option4()
             {
+                // list the customers from the customers.csv
+                Console.WriteLine($"{"Name",-10} \t{"Member ID",-6} \t{"Date Of Birth",-10} \t{"Tier",-8} \t{"Points",-6} \t{"PunchCard",-9}");
+                foreach (KeyValuePair<int, Customer> kvp in customerDic)
+                {
+                    Customer customer = kvp.Value;
+                    Console.WriteLine($"{customer.name,-10} \t{customer.memberId,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier,-8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
+                }
+                Console.WriteLine();
 
+
+                // prompt user to select a customer and retrieve the selected customer
+                Console.Write("Select Customer: ");
+                Console.ReadLine();
             }
 
             void Option5()

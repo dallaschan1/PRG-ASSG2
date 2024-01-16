@@ -8,58 +8,67 @@ namespace Assignment2
 {
     internal class PointCard
     {
-        public int points { get; set; }
+        public int Points { get; set; }
 
-        public int punchCard { get; set; }
+        public int PunchCard { get; set; }
 
-        public string tier { get; set; }
+        public string Tier { get; set; }
 
         public PointCard()
         {
-            points = 0;
-            punchCard = 0;
-            tier = "Ordinary";
+            Points = 0;
+            PunchCard = 0;
+            Tier = "Ordinary";
         }
 
         public PointCard(int points, int punchCard)
         {
 
-            this.points = points;
-            this.punchCard = punchCard;
-            tier = "Ordinary";
+            Points = points;
+            PunchCard = punchCard;
+            if (Points >= 100)
+            {
+                Tier = "Gold";
+            }
+            else if (Points >= 50)
+            {
+                Tier = "Silver";
+            }
+            else
+            {
+                Tier = "Ordinary";
+            }
         }
 
         public void AddPoints(int money)
         {
-
-            points += (int)Math.Floor(money * 0.72);
-            if (points >= 100 && tier != "Gold")
+            Points += (int)Math.Floor(money * 0.72);
+            if (Points >= 100 && Tier != "Gold")
             {
-                tier = "Gold";
+                Tier = "Gold";
             }
-            else if (points >= 50 && tier == "Ordinary")
+            else if (Points >= 50 && Tier == "Ordinary")
             {
-                tier = "Silver";
+                Tier = "Silver";
             }
-
         }
 
         public void RedeemPoints(int amount)
         {
-            points -= amount;
+            Points -= amount;
         }
 
         public void Punch()
         {
-            if (punchCard == 10)
+            if (PunchCard == 10)
             {
-                punchCard = 0;
+                PunchCard = 0;
             }
-            else { punchCard += 1; }
+            else { PunchCard += 1; }
         }
         public override string ToString()
         {
-            return $"points: {points}, punchCard: {punchCard}, tier: {tier}";
+            return $"points: {Points}, punchCard: {PunchCard}, tier: {Tier}";
         }
 
     }

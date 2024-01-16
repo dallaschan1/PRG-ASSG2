@@ -196,9 +196,6 @@ namespace Assignment2
                 Cup newOne = new Cup(type, scoops, flavours, toppings);
                 IceCreamList[iceCream] = newOne;
             }
-
-
-
         }
 
         public override string ToString()

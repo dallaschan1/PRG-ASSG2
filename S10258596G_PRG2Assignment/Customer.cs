@@ -23,7 +23,9 @@ namespace Assignment2
 
         public Customer() 
         {
+            currentOrder = null;
             orderHistory = new List<Order>();
+            rewards = new PointCard();
         }
 
         public Customer(string name, int memberId, DateTime dob)
@@ -32,8 +34,8 @@ namespace Assignment2
             this.memberId = memberId;
             this.dob = dob;
             currentOrder = null;
-            rewards = null;
-
+            orderHistory = new List<Order>();
+            rewards = new PointCard();
         }
 
         public Order MakeOrder()
@@ -56,9 +58,6 @@ namespace Assignment2
             {
                 return false;
             }
-
-
-          
         }
 
         public override string ToString()
