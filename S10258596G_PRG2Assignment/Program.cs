@@ -424,7 +424,7 @@ namespace Assignment2
 
                 Order newOrder = new Order();
 
-                int orderID = orderDic.Count() + 1;
+                int orderID = orderDic.Count + 1;
                 DateTime timeRecieved = DateTime.Now;
                 DateTime? timefulfilled = null;
 
@@ -727,7 +727,7 @@ namespace Assignment2
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                 }
 
-                selectedCustomer.currentOrder.Id = orderDic.Count() + 1;
+                selectedCustomer.currentOrder.Id = orderDic.Count + 1;
                 selectedCustomer.currentOrder.TimeRecieved = DateTime.Now;
                 selectedCustomer.currentOrder.TimeFulfilled = null;
             }
