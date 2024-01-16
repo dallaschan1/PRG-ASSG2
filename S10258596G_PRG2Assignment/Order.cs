@@ -11,32 +11,34 @@ namespace Assignment2
     {
         public int id;
         public DateTime timeRecieved { get; set; }
-        public DateTime? timeFulfilled { get; set; }
-        public List<IceCream> iceCreamList { get; set; } = new List<IceCream>();
+        public DateTime? TimeFulfilled { get; set; }
+        public List<IceCream> IceCreamList { get; set; }
 
         public Order()
         {
-
+            IceCreamList = new List<IceCream>();
         }
 
-        public Order(int id, DateTime timeRecieved)
+        public Order(int id, DateTime timeRecieved, DateTime? timeFulfilled, List<IceCream>iceCreamList)
         {
             this.id = id;
             this.timeRecieved = timeRecieved;
+            TimeFulfilled = timeFulfilled;
+            IceCreamList = iceCreamList;
         }
 
         public void AddIceCream(IceCream iceCream)
         {
 
-            iceCreamList.Add(iceCream);
+            IceCreamList.Add(iceCream);
         }
 
         public void DeleteIceCream(int id)
         {
             
-            if (id >= 0 && id < iceCreamList.Count)
+            if (id >= 0 && id < IceCreamList.Count)
             {
-                iceCreamList.RemoveAt(id - 1);
+                IceCreamList.RemoveAt(id - 1);
             }
             else
             {
@@ -47,7 +49,7 @@ namespace Assignment2
         public double CalculateTotal()
         {
             double total = 0;
-            foreach (IceCream iceCream in iceCreamList)
+            foreach (IceCream iceCream in IceCreamList)
             {
                 total += iceCream.CalculatePrice();
             }
@@ -174,7 +176,7 @@ namespace Assignment2
                 }
 
                 Waffle newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
-                iceCreamList[iceCream] = newOne;
+                IceCreamList[iceCream] = newOne;
             }
             else if (type == "cone")
             {
@@ -187,12 +189,12 @@ namespace Assignment2
                 }
 
                 Cone newOne = new Cone(type, scoops, flavours, toppings, dipped);
-                iceCreamList[iceCream] = newOne;
+                IceCreamList[iceCream] = newOne;
             }
             else if (type == "cup")
             {
                 Cup newOne = new Cup(type, scoops, flavours, toppings);
-                iceCreamList[iceCream] = newOne;
+                IceCreamList[iceCream] = newOne;
             }
 
 
@@ -201,10 +203,10 @@ namespace Assignment2
 
         public override string ToString()
         {
-            string timeFulfilledStr = timeFulfilled.HasValue ? timeFulfilled.Value.ToString() : "Not Fulfilled";
+            string timeFulfilledStr = TimeFulfilled.HasValue ? TimeFulfilled.Value.ToString() : "Not Fulfilled";
 
             string iceCreamDetails = "";
-            foreach (IceCream iceCream in iceCreamList)
+            foreach (IceCream iceCream in IceCreamList)
             {
                 iceCreamDetails += iceCream.ToString() + "\n"; 
             }

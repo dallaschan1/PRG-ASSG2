@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Globalization;
 using System.Xml.Linq;
+using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace Assignment2
 {
@@ -38,8 +40,19 @@ namespace Assignment2
             CustomerCreation();
 
 
-            // NOT DONE YET!!!!
-            /* Commented out
+            bool CheckPremiumFlavour(string flavour)
+            {
+                List<string> specialFlavour = new List<string>() { "Durian", "Ube", "Sea Salt" };
+                if (specialFlavour.Contains(flavour))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
             void OrderCreation()
             {
                 // Dataset not given yet.
@@ -51,12 +64,74 @@ namespace Assignment2
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] details = s.Split(',');
-                        Order orderNew;
+                        DateTime timeReceived = DateTime.ParseExact(details[2], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                        DateTime? timeFulfilled;
+                        timeFulfilled = DateTime.ParseExact(details[3], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+
+                        // Creating IceCreamList
+                        List<IceCream> iceCreamList = new List<IceCream>();
+
+                        // Creating individual IceCreams
+                        string option = details[4];
+                        int scoops = Convert.ToInt32(details[5]);
+
+                        List<Flavour> flavourList = new List<Flavour>();
+                        Dictionary<string, int> flavourCount = new Dictionary<string, int>();
+                        int premiumFlavourCount = 0;
+                        for (int i = 6; i < scoops+6; i++)
+                        {
+                            if (flavourCount.ContainsKey(details[i]))
+                            {
+                                flavourCount[details[i]]++;
+                            }
+                            else
+                            {
+                                flavourCount.Add(details[i], 1);
+                            }
+                        }
+                        foreach (KeyValuePair<string, int> kvp in flavourCount)
+                        {
+                            Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
+                        }
+
+                        List<Topping> toppingList = new List<Topping>();
+                        for (int i = 12; i < 4+12; i++)
+                        {
+                            if (details[i] != null)
+                            {
+                                toppingList.Add(new Topping(details[i]));
+                            }
+                            else { break; }
+                        }
+
+                        if (option == "Waffle")
+                        {
+                            string waffleFlavour = details[7];
+                            IceCream newIceCream = new Waffle(option, scoops, flavourList, toppingList, waffleFlavour);
+                            iceCreamList.Add(newIceCream);
+
+                        }
+                        else if (option == "Cone")
+                        {
+                            bool dipped = bool.Parse(details[6]);
+                            IceCream newIceCream = new Cone(option, scoops, flavourList, toppingList, dipped);
+                            iceCreamList.Add(newIceCream);
+                        }
+                        else if (option == "Cup")
+                        {
+                            IceCream newIceCream = new Cup(option, scoops, flavourList, toppingList);
+                            iceCreamList.Add(newIceCream);
+                        }
+                        // Finish creating IceCream and adding it to iceCreamList
+
+                        Order orderNew = new Order(Convert.ToInt32(details[0]), timeReceived, timeFulfilled, iceCreamList);
+                        // Finish creating order for customer
+                        int memberID = Int32.Parse(details[2]);
+                        customerDic[memberID].orderHistory.Add(orderNew);
                     }
                 }
             }
             OrderCreation();
-            */
 
 
             // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
@@ -206,6 +281,11 @@ namespace Assignment2
                 Console.WriteLine("Registration Status: Successful!"); // Might need to shift it in the error handling part instead
             }
 
+            void option4()
+            {
+
+            }
+
             void Option5()
             {
                 if (customerDic.Count > 0)
@@ -297,7 +377,7 @@ namespace Assignment2
                 {
                     case "1":
                         int iceCreamNumber = 1;
-                        foreach (IceCream icecream in selectedCustomer.currentOrder.iceCreamList)
+                        foreach (IceCream icecream in selectedCustomer.currentOrder.IceCreamList)
                         {
                             Console.WriteLine($"Ice Cream {iceCreamNumber}: {icecream.ToString()}");
                             iceCreamNumber++;
@@ -310,11 +390,11 @@ namespace Assignment2
                             string inputs = Console.ReadLine();
                             if (int.TryParse(inputs, out selectedIceCreamIndex) &&
                                 selectedIceCreamIndex >= 1 &&
-                                selectedIceCreamIndex <= selectedCustomer.currentOrder.iceCreamList.Count)
+                                selectedIceCreamIndex <= selectedCustomer.currentOrder.IceCreamList.Count)
                             {
                                 break;
                             }
-                            Console.WriteLine($"Invalid input. Please enter a number between 1 and {selectedCustomer.currentOrder.iceCreamList.Count}:");
+                            Console.WriteLine($"Invalid input. Please enter a number between 1 and {selectedCustomer.currentOrder.IceCreamList.Count}:");
                         }
 
                         selectedIceCreamIndex -= 1;
