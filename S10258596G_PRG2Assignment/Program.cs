@@ -276,6 +276,7 @@ namespace Assignment2
                 {
                     Console.WriteLine(order.ToString());
                 }
+                Console.WriteLine();
             }
 
             void Option3()
@@ -432,7 +433,7 @@ namespace Assignment2
 
                 while (true)
                 {
-                    Console.Write("Would you like to add another ice cream to the order? (yes / no)");
+                    Console.Write("Would you like to add another ice cream to the order? (yes / no): ");
                     string response = Console.ReadLine().ToLower();
                     if (response == "yes")
                     {
@@ -457,7 +458,7 @@ namespace Assignment2
                     NormalQueue.Enqueue(selectedCustomer.currentOrder);
                 }
 
-                Console.WriteLine("Your order has been made successfully!");
+                Console.WriteLine("Your order has been made successfully!\n");
             }
 
             void Option5()
@@ -705,7 +706,7 @@ namespace Assignment2
                         waffleFlavor = GetValidInput("Which flavor do u want? (Red velvet, charcoal, or pandan waffle): ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
                     }
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
-                    selectedCustomer.currentOrder.IceCreamList.Add(newOne);
+                    selectedCustomer.currentOrder.AddIceCream(newOne);
                 }
                 else if (type == "cone")
                 {
@@ -718,14 +719,13 @@ namespace Assignment2
                     }
 
                     IceCream newOne = new Cone(type, scoops, flavours, toppings, dipped);
-                    selectedCustomer.currentOrder.IceCreamList.Add(newOne);
+                    selectedCustomer.currentOrder.AddIceCream(newOne);
                 }
                 else if (type == "cup")
                 {
                     IceCream newOne = new Cup(type, scoops, flavours, toppings);
-                    selectedCustomer.currentOrder.IceCreamList.Add(newOne);
+                    selectedCustomer.currentOrder.AddIceCream(newOne);
                 }
-
 
                 selectedCustomer.currentOrder.Id = orderDic.Count() + 1;
                 selectedCustomer.currentOrder.TimeRecieved = DateTime.Now;
