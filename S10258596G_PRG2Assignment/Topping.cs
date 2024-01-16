@@ -14,12 +14,15 @@ namespace Assignment2
 
         public Topping(string type)
         {
+            
             Type = type;
         }
 
         public override string ToString()
         {
-            return $"Type: {Type}";
+          
+
+            return $"{Type}";
         }
     }
 }
