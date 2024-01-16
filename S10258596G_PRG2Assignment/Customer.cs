@@ -23,7 +23,7 @@ namespace Assignment2
 
         public Customer() 
         {
-            currentOrder = null;
+            currentOrder = new Order();
             orderHistory = new List<Order>();
             rewards = new PointCard();
         }
@@ -33,7 +33,7 @@ namespace Assignment2
             this.name = name;
             this.memberId = memberId;
             this.dob = dob;
-            currentOrder = null;
+            currentOrder = new Order();
             orderHistory = new List<Order>();
             rewards = new PointCard();
         }

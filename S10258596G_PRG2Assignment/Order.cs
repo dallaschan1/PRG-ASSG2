@@ -9,8 +9,8 @@ namespace Assignment2
 {
     internal class Order
     {
-        public int id;
-        public DateTime timeRecieved { get; set; }
+        public int Id;
+        public DateTime TimeRecieved { get; set; }
         public DateTime? TimeFulfilled { get; set; }
         public List<IceCream> IceCreamList { get; set; }
 
@@ -21,8 +21,8 @@ namespace Assignment2
 
         public Order(int id, DateTime timeRecieved, DateTime? timeFulfilled, List<IceCream>iceCreamList)
         {
-            this.id = id;
-            this.timeRecieved = timeRecieved;
+            Id = id;
+            TimeRecieved = timeRecieved;
             TimeFulfilled = timeFulfilled;
             IceCreamList = iceCreamList;
         }
@@ -59,7 +59,6 @@ namespace Assignment2
 
         public void ModifyIceCream(int iceCream)
         {
-            
             List<string> normalFlavor = new List<string>() { "vanilla", "chocolate", "strawberry" };
             List<string> specialFlavor = new List<string>() { "durian", "ube", "sea salt" };
             List<string> flavorsWanted = new List<string>();
@@ -208,7 +207,7 @@ namespace Assignment2
                 iceCreamDetails += iceCream.ToString() + "\n"; 
             }
 
-            return $"Order ID: {id}, TimeReceived: {timeRecieved}, TimeFulfilled: {timeFulfilledStr}, Ice Creams: \n{iceCreamDetails}";
+            return $"Order ID: {Id}, TimeReceived: {TimeRecieved}, TimeFulfilled: {timeFulfilledStr}, Ice Creams: \n{iceCreamDetails}";
         }
 
 
