@@ -72,14 +72,5 @@ namespace Assignment2
 
             return $"Name: {name}, Member ID: {memberId}, Date of Birth: {dob.ToShortDateString()}, {currentOrderString}, {orderHistoryString}, {birthdayString}";
         }
-
-
-
     }
-
-
-
-
-
-
 }
