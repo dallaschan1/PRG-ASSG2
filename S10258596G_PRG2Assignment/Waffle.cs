@@ -63,7 +63,10 @@ namespace Assignment2
 
         public override string ToString()
         {
-            return base.ToString() + $"\tWaffleFlavour: {WaffleFlavour}";
+            var stringBuilder = new StringBuilder(base.ToString());
+            stringBuilder.AppendLine($"Waffle Flavour: {WaffleFlavour}");
+            return stringBuilder.ToString();
         }
+
     }
 }

@@ -31,45 +31,24 @@ namespace Assignment2
 
         public override string ToString()
         {
-            string flavours = "";
-            foreach (Flavour flavour in Flavours)
-            {
-                flavours += flavour;
-            }
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"Option: {Option}");
+            stringBuilder.AppendLine($"Scoops: {Scoops}");
 
-            
-            List<string> tops = new List<string>() { "sprinkles", "mochi", "sago", "oreos" };
-            string toppings = "";
+            // Building the flavours string
+            string flavourText = Flavours.Count > 0
+                ? string.Join(", ", Flavours.Select(flavour => $"{flavour.Type} (Premium: {flavour.Premium}, Quantity: {flavour.Quantity})"))
+                : "None";
+            stringBuilder.AppendLine($"Flavours: {flavourText}");
 
+            // Building the toppings string
+            string toppingText = Toppings.Count > 0
+                ? string.Join(", ", Toppings.Select(topping => topping.Type))
+                : "None";
+            stringBuilder.AppendLine($"Toppings: {toppingText}");
 
-            for (int i = 0; i < Toppings.Count; i++)
-            {
-                Topping topping = Toppings[i];
-                string type = topping.Type.ToLower();
-                if (tops.Contains(type))
-                {
-                    toppings += topping.Type; 
-                    if (i != Toppings.Count - 1) 
-                    {
-                        toppings += ", ";
-                    }
-                }
-            }
-
-    
-            if (toppings.EndsWith(", "))
-            {
-                toppings = toppings.Substring(0, toppings.Length - 2);
-            }
-
-            if (toppings == "")
-            {
-                toppings = "None";
-            }
-
-            string output = $"Option: {Option}\tScoops: {Scoops}\tFlavours: {flavours}\tToppings: {toppings}\t";
-
-            return output;
+            return stringBuilder.ToString().TrimEnd();
         }
+
     }
 }

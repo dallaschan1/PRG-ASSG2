@@ -64,6 +64,8 @@ namespace Assignment2
             {
                 using (StreamReader sr = new StreamReader("orders.csv"))
                 {
+                   
+                    
                     string? s = sr.ReadLine(); // read the heading
                     string[] heading = s.Split(',');
 
@@ -81,25 +83,30 @@ namespace Assignment2
 
                         // Adding all the flavours into flavourList
                         List<Flavour> flavourList = new List<Flavour>();
-            Dictionary<string, int> flavourCount = new Dictionary<string, int>();
-            for (int i = 8; i < 8 + scoops; i++)
-            {
-                if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
-                {
-                    flavourCount.Add(details[i], 1);
-                }
-            }
-            foreach (KeyValuePair<string, int> kvp in flavourCount)
-            {
-                Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
-                flavourList.Add(addFlavour);
-            }
+                        Dictionary<string, int> flavourCount = new Dictionary<string, int>();
+                        for (int i = 8; i < 8 + scoops; i++)
+                        {
+                        if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
+                        {
+                        flavourCount.Add(details[i], 1);
+                        }
+                        else if (!string.IsNullOrEmpty(details[i]) && flavourCount.ContainsKey(details[i]))
+                            {
+                                flavourCount[details[i]]++;
+                            }
+                    }
+                    foreach (KeyValuePair<string, int> kvp in flavourCount)
+                    {
+                        Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
+                        flavourList.Add(addFlavour);
+                    }
 
                         // Adding all the toppings into toppingList
                         List<Topping> toppingList = new List<Topping>();
+                        List<string> tops = new List<string>() { "Sprinkles", "Mochi", "Sago", "Oreos" };
                         for (int i = 11; i < 4+11; i++)
                         {
-                            if (details[i] != null)
+                            if (tops.Contains(details[i]))
                             {
                                 toppingList.Add(new Topping(details[i]));
                             }
@@ -129,7 +136,8 @@ namespace Assignment2
                         // Finish creating IceCream and adding it to iceCreamList
 
                         List<IceCream> iceCreamList = new List<IceCream> { newIceCream };
-                        Order newOrder = new Order(id, timeReceived, timeFulfilled, iceCreamList);
+                        Order newOrder = new Order(id, timeReceived);
+                        newOrder.TimeFulfilled = timeFulfilled;
 
                         if (orderDic.ContainsKey(id))
                         {
@@ -137,6 +145,7 @@ namespace Assignment2
                         }
                         else
                         {
+                            newOrder.IceCreamList = iceCreamList;
                             orderDic.Add(id, newOrder);
                         }
 
@@ -144,29 +153,32 @@ namespace Assignment2
                         int memberID = Int32.Parse(details[1]);
                         Customer customer = customerDic[memberID];
                         List<Order> orderHistory = customer.orderHistory;
+                        bool isNewOrder = true;
                         foreach (Order order in orderHistory)
                         {
                             if (order.Id == id)
                             {
+                               
                                 order.IceCreamList.Add(newIceCream);
+                                isNewOrder = false;
+                                break;
                             }
                         }
-                        orderHistory.Add(newOrder);
+                        if (isNewOrder)
+                        {
+                            
+                            orderHistory.Add(newOrder);
+                        }
 
-                        if (customer.rewards.Tier == "Gold")
-                        {
-                            if (!GoldQueue.Contains(newOrder))
-                            {
-                                GoldQueue.Enqueue(newOrder);
-                            }
-                        }
-                        else
-                        {
-                            if (!NormalQueue.Contains(newOrder))
-                            {
-                                NormalQueue.Enqueue(newOrder);
-                            }
-                        }
+
+                        
+                    }
+                }
+                foreach (var customer1 in customerDic)
+                {
+                   foreach (Order order in customer1.Value.orderHistory)
+                    {
+                        Console.WriteLine(order);
                     }
                 }
             }
@@ -361,14 +373,14 @@ namespace Assignment2
                 {
                     try
                     {
-                        Console.Write("Enter Customer Date Of Birth (M/dd/yyyy): ");
-                        dob = DateTime.ParseExact(Console.ReadLine(), "M/dd/yyyy", null);
+                        Console.Write("Enter Customer Date Of Birth (dd/mm/yyyy): ");
+                        dob = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy", null);
                         break;
                     }
                     catch (FormatException)
                     {
                         // Input is not in the correct format
-                        Console.WriteLine("Invalid date format. Please enter the date in dd/MM/yyyy format.\n");
+                        Console.WriteLine("Invalid date format. Please enter the date in dd/mm/yyyy format.\n");
                     }
                     catch (Exception ex)
                     {
@@ -379,7 +391,7 @@ namespace Assignment2
                 Customer newCustomer = new Customer(name, id, dob);
                 customerDic.Add(newCustomer.memberId, newCustomer);
 
-                string data = $"{name},{id},{dob.ToShortDateString()},{newCustomer.rewards.Tier},{newCustomer.rewards.Points},{newCustomer.rewards.PunchCard}";
+                string data = $"{name},{id},{dob.ToString("d/M/yyyy")},{newCustomer.rewards.Tier},{newCustomer.rewards.Points},{newCustomer.rewards.PunchCard}";
 
                 using (StreamWriter sw = new StreamWriter("customers.csv", true))
                 {
@@ -492,9 +504,9 @@ namespace Assignment2
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
                             {
-                                foreach (Order order in selectedCustomer.orderHistory)
+                                foreach(Order order in selectedCustomer.orderHistory)
                                 {
-                                    Console.WriteLine(order.ToString());
+                                    Console.WriteLine($"{order}");
                                 }
                             }
                             else
@@ -522,15 +534,16 @@ namespace Assignment2
 
                 Customer selectedCustomer = null;
 
+                Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
+                foreach (var entry in customerDic)
+                {
+
+                    Console.WriteLine(entry.Value);
+
+                }
                 do
                 {
-                    Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
-                    foreach (var entry in customerDic)
-                    {
-
-                        Console.WriteLine(entry.Value);
-                       
-                    }
+                   
                     Console.Write("Which Customer do you wish to select (ID or 0 to exit): ");
 
                     int customerId;
@@ -549,12 +562,14 @@ namespace Assignment2
                         Console.Write("Invalid input. Please enter a valid customer ID (0 to exit):");
                     }
 
-                    if (selectedCustomer.currentOrder == null)
+                    if (selectedCustomer.currentOrder.Id == 0)
                     {
                         Console.WriteLine("The selected customer does not have a current order. Please select another customer.");
                     }
 
-                } while (selectedCustomer.currentOrder == null);
+                } while (selectedCustomer.currentOrder.Id == 0);
+
+                Console.WriteLine(selectedCustomer.currentOrder);
 
                 Console.WriteLine("\nChoose an action for the ice cream order:");
                 Console.WriteLine("[1] Modify an existing ice cream");
@@ -723,6 +738,7 @@ namespace Assignment2
                     }
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
+                    
                 }
                 else if (type == "cone")
                 {
@@ -746,6 +762,7 @@ namespace Assignment2
                 selectedCustomer.currentOrder.Id = orderDic.Count + 1;
                 selectedCustomer.currentOrder.TimeRecieved = DateTime.Now;
                 selectedCustomer.currentOrder.TimeFulfilled = null;
+
             }
         }
     }
