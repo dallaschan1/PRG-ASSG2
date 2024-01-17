@@ -64,7 +64,7 @@ namespace Assignment2
         public override string ToString()
         {
             var stringBuilder = new StringBuilder(base.ToString());
-            stringBuilder.AppendLine($"Waffle Flavour: {WaffleFlavour}");
+            stringBuilder.AppendLine($"\nWaffle Flavour: {WaffleFlavour}");
             return stringBuilder.ToString();
         }
 

@@ -21,6 +21,7 @@ namespace Assignment2
             Queue<Order> GoldQueue = new Queue<Order>();
             Dictionary<int, Customer> customerDic = new Dictionary<int, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
+         
 
             // Create customers and orders from the given data files at the onset. 
             void CustomerCreation()
@@ -139,32 +140,26 @@ namespace Assignment2
                         Order newOrder = new Order(id, timeReceived);
                         newOrder.TimeFulfilled = timeFulfilled;
 
-                        if (orderDic.ContainsKey(id))
-                        {
-                            orderDic[id].IceCreamList.Add(newIceCream);
-                        }
-                        else
-                        {
-                            newOrder.IceCreamList = iceCreamList;
-                            orderDic.Add(id, newOrder);
-                        }
-
+                      
+                      
+                        
                         // Finish creating order for customer
                         int memberID = Int32.Parse(details[1]);
                         Customer customer = customerDic[memberID];
                         List<Order> orderHistory = customer.orderHistory;
-                        bool isNewOrder = true;
+                        bool isNewOrder = false;
+                        newOrder.IceCreamList = iceCreamList;
                         foreach (Order order in orderHistory)
                         {
                             if (order.Id == id)
                             {
                                
                                 order.IceCreamList.Add(newIceCream);
-                                isNewOrder = false;
+                                isNewOrder = true;
                                 break;
                             }
                         }
-                        if (isNewOrder)
+                        if (!isNewOrder)
                         {
                             
                             orderHistory.Add(newOrder);
@@ -174,13 +169,9 @@ namespace Assignment2
                         
                     }
                 }
-                foreach (var customer1 in customerDic)
-                {
-                   foreach (Order order in customer1.Value.orderHistory)
-                    {
-                        Console.WriteLine(order);
-                    }
-                }
+                
+                
+                
             }
             OrderCreation();
 
@@ -482,12 +473,14 @@ namespace Assignment2
 
             void Option5()
             {
+
+
                 if (customerDic.Count > 0)
                 {
                     Console.WriteLine("Customers:");
                     foreach (var entry in customerDic)
                     {
-                        Console.WriteLine(entry.Key);
+                        Console.WriteLine(entry.Key); // Display customer IDs
                     }
                     Console.Write("Which Customer do you wish to select (ID): ");
 
@@ -499,7 +492,7 @@ namespace Assignment2
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
                             {
-                                foreach(Order order in selectedCustomer.orderHistory)
+                                foreach (Order order in selectedCustomer.orderHistory)
                                 {
                                     Console.WriteLine($"{order}");
                                 }
@@ -517,6 +510,7 @@ namespace Assignment2
                 {
                     Console.WriteLine("No customers available.");
                 }
+
             }
 
             void Option6()
