@@ -69,7 +69,7 @@ namespace Assignment2
 
 
 
-            return $"{name,-15}{memberId,-15}{dob.ToShortDateString(),-15}{rewards.Tier,-10}{rewards.Points,-10}{rewards.PunchCard, -15}{orderHistoryString,-20}";
+            return $"{name,-15}{memberId,-15}{dob.ToShortDateString(),-15}{rewards.Tier,-10}{rewards.Points,-10}{rewards.PunchCard, -15}{orderHistoryString,-20}{currentOrderString}";
 
         }
     }
