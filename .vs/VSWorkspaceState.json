@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\S10258596G_PRG2Assignment"
+    "\\S10258596G_PRG2Assignment",
+    "\\S10258596G_PRG2Assignment\\bin",
+    "\\S10258596G_PRG2Assignment\\bin\\Debug",
+    "\\S10258596G_PRG2Assignment\\bin\\Debug\\net6.0"
   ],
-  "SelectedNode": "\\S10258596G_PRG2Assignment\\Order.cs",
+  "SelectedNode": "\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
   "PreviewInSolutionExplorer": false
 }

@@ -34,16 +34,40 @@ namespace Assignment2
             string flavours = "";
             foreach (Flavour flavour in Flavours)
             {
-                flavours += flavour + "  ";
+                flavours += flavour;
             }
 
+            
+            List<string> tops = new List<string>() { "sprinkles", "mochi", "sago", "oreos" };
             string toppings = "";
-            foreach (Topping topping in Toppings)
+
+
+            for (int i = 0; i < Toppings.Count; i++)
             {
-                toppings += topping + "  ";
+                Topping topping = Toppings[i];
+                string type = topping.Type.ToLower();
+                if (tops.Contains(type))
+                {
+                    toppings += topping.Type; 
+                    if (i != Toppings.Count - 1) 
+                    {
+                        toppings += ", ";
+                    }
+                }
             }
 
-            string output = $"Option: {Option} \tScoops: {Scoops} \tFlavours: {flavours} \tToppings: {toppings}";
+    
+            if (toppings.EndsWith(", "))
+            {
+                toppings = toppings.Substring(0, toppings.Length - 2);
+            }
+
+            if (toppings == "")
+            {
+                toppings = "None";
+            }
+
+            string output = $"Option: {Option}\tScoops: {Scoops}\tFlavours: {flavours}\tToppings: {toppings}\t";
 
             return output;
         }

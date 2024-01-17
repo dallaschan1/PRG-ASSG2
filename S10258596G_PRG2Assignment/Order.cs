@@ -207,7 +207,7 @@ namespace Assignment2
                 iceCreamDetails += iceCream.ToString() + "\n"; 
             }
 
-            return $"Order ID: {Id}, TimeReceived: {TimeRecieved}, TimeFulfilled: {timeFulfilledStr}, Ice Creams: \n{iceCreamDetails}";
+            return $"Order ID: {Id}, TimeReceived: {TimeRecieved}, TimeFulfilled: {timeFulfilledStr},\nIce Creams: \n{iceCreamDetails}";
         }
 
 

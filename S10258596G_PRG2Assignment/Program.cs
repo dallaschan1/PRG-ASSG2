@@ -32,7 +32,8 @@ namespace Assignment2
 
                     while ((s = sr.ReadLine()) != null)
                     {
-                        string[] details = s.Split(',');
+                        string[] details = s.Split(',').Select(detail => detail.Trim()).ToArray();
+
                         DateTime dob = DateTime.ParseExact(details[2], "d/M/yyyy", CultureInfo.InvariantCulture);
                         PointCard pointCard = new PointCard(Int32.Parse(details[4]),Int32.Parse(details[5]));
                         Customer customerNew = new Customer(details[0], Convert.ToInt32(details[1]), dob);
@@ -80,23 +81,19 @@ namespace Assignment2
 
                         // Adding all the flavours into flavourList
                         List<Flavour> flavourList = new List<Flavour>();
-                        Dictionary<string, int> flavourCount = new Dictionary<string, int>();
-                        int premiumFlavourCount = 0;
-                        for (int i = 6; i < scoops+6; i++)
-                        {
-                            if (flavourCount.ContainsKey(details[i]))
-                            {
-                                flavourCount[details[i]]++;
-                            }
-                            else
-                            {
-                                flavourCount.Add(details[i], 1);
-                            }
-                        }
-                        foreach (KeyValuePair<string, int> kvp in flavourCount)
-                        {
-                            Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
-                        }
+            Dictionary<string, int> flavourCount = new Dictionary<string, int>();
+            for (int i = 8; i < 8 + scoops; i++)
+            {
+                if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
+                {
+                    flavourCount.Add(details[i], 1);
+                }
+            }
+            foreach (KeyValuePair<string, int> kvp in flavourCount)
+            {
+                Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
+                flavourList.Add(addFlavour);
+            }
 
                         // Adding all the toppings into toppingList
                         List<Topping> toppingList = new List<Topping>();
@@ -155,6 +152,21 @@ namespace Assignment2
                             }
                         }
                         orderHistory.Add(newOrder);
+
+                        if (customer.rewards.Tier == "Gold")
+                        {
+                            if (!GoldQueue.Contains(newOrder))
+                            {
+                                GoldQueue.Enqueue(newOrder);
+                            }
+                        }
+                        else
+                        {
+                            if (!NormalQueue.Contains(newOrder))
+                            {
+                                NormalQueue.Enqueue(newOrder);
+                            }
+                        }
                     }
                 }
             }
@@ -349,8 +361,8 @@ namespace Assignment2
                 {
                     try
                     {
-                        Console.Write("Enter Customer Date Of Birth (dd/MM/yyyy): ");
-                        dob = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy", null);
+                        Console.Write("Enter Customer Date Of Birth (M/dd/yyyy): ");
+                        dob = DateTime.ParseExact(Console.ReadLine(), "M/dd/yyyy", null);
                         break;
                     }
                     catch (FormatException)
@@ -465,9 +477,10 @@ namespace Assignment2
             {
                 if (customerDic.Count > 0)
                 {
+                    Console.WriteLine("Customers:");
                     foreach (var entry in customerDic)
                     {
-                        Console.WriteLine($"Customer {entry.Key}: {entry.Value.ToString()}");
+                        Console.WriteLine(entry.Key);
                     }
                     Console.Write("Which Customer do you wish to select (ID): ");
 
@@ -477,7 +490,7 @@ namespace Assignment2
                         if (int.TryParse(Console.ReadLine(), out customerId) &&
                             customerDic.TryGetValue(customerId, out Customer selectedCustomer))
                         {
-                            if (selectedCustomer.orderHistory != null)
+                            if (selectedCustomer.orderHistory.Count != 0)
                             {
                                 foreach (Order order in selectedCustomer.orderHistory)
                                 {
@@ -511,9 +524,12 @@ namespace Assignment2
 
                 do
                 {
+                    Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
                     foreach (var entry in customerDic)
                     {
-                        Console.WriteLine($"Customer {entry.Key}: {entry.Value.ToString()}");
+
+                        Console.WriteLine(entry.Value);
+                       
                     }
                     Console.Write("Which Customer do you wish to select (ID or 0 to exit): ");
 
