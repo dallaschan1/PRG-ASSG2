@@ -81,19 +81,19 @@ namespace Assignment2
 
                         // Adding all the flavours into flavourList
                         List<Flavour> flavourList = new List<Flavour>();
-            Dictionary<string, int> flavourCount = new Dictionary<string, int>();
-            for (int i = 8; i < 8 + scoops; i++)
-            {
-                if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
-                {
-                    flavourCount.Add(details[i], 1);
-                }
-            }
-            foreach (KeyValuePair<string, int> kvp in flavourCount)
-            {
-                Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
-                flavourList.Add(addFlavour);
-            }
+                        Dictionary<string, int> flavourCount = new Dictionary<string, int>();
+                        for (int i = 8; i < 8 + scoops; i++)
+                        {
+                            if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
+                            {
+                                flavourCount.Add(details[i], 1);
+                            }
+                        }
+                        foreach (KeyValuePair<string, int> kvp in flavourCount)
+                        {
+                            Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
+                            flavourList.Add(addFlavour);
+                        }
 
                         // Adding all the toppings into toppingList
                         List<Topping> toppingList = new List<Topping>();
@@ -293,16 +293,6 @@ namespace Assignment2
 
             void Option3()
             {
-                /*
-                3) Register a new customer
-                 prompt user for the following information for the customer: name, id number, date of birth
-                 create a customer object with the information given
-                 create a Pointcard object
-                 assign Pointcard object to the customer
-                 append the customer information to the customers.csv file
-                 display a message to indicate registration status
-                */
-                // Haven't finish data validation and exception handling and the rest
                 string name = "";
                 int id = 0;
                 DateTime dob;
@@ -325,7 +315,7 @@ namespace Assignment2
                         else { break; }
                     }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
-        }
+                }
 
                 while (true)
                 {
@@ -346,7 +336,11 @@ namespace Assignment2
                             }
                             else
                             {
-                                break;
+                                if (customerDic.ContainsKey(id) == false) { break; }
+                                else
+                                {
+                                    Console.WriteLine("CustomerID has already been taken! Please try again.\n");
+                                }
                             }
                         }
                     }
@@ -361,8 +355,8 @@ namespace Assignment2
                 {
                     try
                     {
-                        Console.Write("Enter Customer Date Of Birth (M/dd/yyyy): ");
-                        dob = DateTime.ParseExact(Console.ReadLine(), "M/dd/yyyy", null);
+                        Console.Write("Enter Customer Date Of Birth (dd/MM/yyyy): ");
+                        dob = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy", null);
                         break;
                     }
                     catch (FormatException)
@@ -376,6 +370,7 @@ namespace Assignment2
                         Console.WriteLine($"An error occurred: {ex.Message}\n");
                     }
                 }
+
                 Customer newCustomer = new Customer(name, id, dob);
                 customerDic.Add(newCustomer.memberId, newCustomer);
 
