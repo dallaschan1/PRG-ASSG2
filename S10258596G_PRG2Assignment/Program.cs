@@ -185,8 +185,8 @@ namespace Assignment2
             OrderCreation();
 
 
-            // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
-            void DisplayMenu()
+        // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
+        void DisplayMenu()
             {
                 Console.WriteLine("---------------- M E N U -----------------");
                 Console.WriteLine("[1] List all customers");
@@ -305,16 +305,6 @@ namespace Assignment2
 
             void Option3()
             {
-                /*
-                3) Register a new customer
-                 prompt user for the following information for the customer: name, id number, date of birth
-                 create a customer object with the information given
-                 create a Pointcard object
-                 assign Pointcard object to the customer
-                 append the customer information to the customers.csv file
-                 display a message to indicate registration status
-                */
-                // Haven't finish data validation and exception handling and the rest
                 string name = "";
                 int id = 0;
                 DateTime dob;
@@ -337,7 +327,7 @@ namespace Assignment2
                         else { break; }
                     }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
-        }
+                }
 
                 while (true)
                 {
@@ -358,7 +348,11 @@ namespace Assignment2
                             }
                             else
                             {
-                                break;
+                                if (customerDic.ContainsKey(id) == false) { break; }
+                                else
+                                {
+                                    Console.WriteLine("CustomerID has already been taken! Please try again.\n");
+                                }
                             }
                         }
                     }
@@ -388,6 +382,7 @@ namespace Assignment2
                         Console.WriteLine($"An error occurred: {ex.Message}\n");
                     }
                 }
+
                 Customer newCustomer = new Customer(name, id, dob);
                 customerDic.Add(newCustomer.memberId, newCustomer);
 
