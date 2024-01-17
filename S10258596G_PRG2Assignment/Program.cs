@@ -161,8 +161,8 @@ namespace Assignment2
             OrderCreation();
 
 
-            // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
-            void DisplayMenu()
+        // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
+        void DisplayMenu()
             {
                 Console.WriteLine("---------------- M E N U -----------------");
                 Console.WriteLine("[1] List all customers");
