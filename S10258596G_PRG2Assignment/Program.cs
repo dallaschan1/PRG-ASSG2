@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 
 namespace Assignment2
 {
@@ -477,10 +478,12 @@ namespace Assignment2
 
                 if (customerDic.Count > 0)
                 {
-                    Console.WriteLine("Customers:");
+                    Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
                     foreach (var entry in customerDic)
                     {
-                        Console.WriteLine(entry.Key); // Display customer IDs
+
+                        Console.WriteLine(entry.Value);
+
                     }
                     Console.Write("Which Customer do you wish to select (ID): ");
 
@@ -603,7 +606,8 @@ namespace Assignment2
                         break;
 
                     case "3":
-                        // Existing code for deleting ice cream
+                        DeleteIceCream(selectedCustomer);
+                        Console.WriteLine("Successfully Deleted.");
                         break;
 
                     default:
@@ -611,6 +615,55 @@ namespace Assignment2
                         break;
                 }
             }
+
+
+
+            void DeleteIceCream(Customer selectedCustomer)
+            {
+                string GetValidInput(string prompt, int maxValidResponse)
+                {
+                    string response;
+                    int responseNumber;
+                    do
+                    {
+                        Console.Write(prompt);
+                        response = Console.ReadLine().ToLower();
+
+                        if (string.IsNullOrWhiteSpace(response))
+                        {
+                            Console.WriteLine("Input cannot be blank. Please try again.");
+                            continue;
+                        }
+
+                        bool isNumeric = int.TryParse(response, out responseNumber);
+                        if (!isNumeric || responseNumber < 0 || responseNumber > maxValidResponse)
+                        {
+                            Console.WriteLine($"Invalid input. Please enter a number between 0 and {maxValidResponse}.");
+                        }
+                    }
+                    while (string.IsNullOrWhiteSpace(response) ||
+                           !int.TryParse(response, out responseNumber) ||
+                           responseNumber < 0 || responseNumber > maxValidResponse);
+                    return response;
+                }
+
+                Console.WriteLine("Ice Creams Within the Selected Customer's Current Order: ");
+                Console.WriteLine(selectedCustomer.currentOrder);
+
+                int maxIceCreamIndex = selectedCustomer.currentOrder.IceCreamList.Count; 
+                string userInput = GetValidInput("Select an ice cream to delete (0 to exit): ", maxIceCreamIndex);
+
+                if (userInput != "0")
+                {
+                    int iceCreamIndex = int.Parse(userInput) - 1;
+                    selectedCustomer.currentOrder.DeleteIceCream(iceCreamIndex);
+                                                               
+                }
+            }
+
+
+
+
 
             void AddIceCream(Customer selectedCustomer)
             {
