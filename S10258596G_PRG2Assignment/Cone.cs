@@ -65,7 +65,9 @@ namespace Assignment2
 
         public override string ToString()
         {
-            return base.ToString() + $"\tDipped: {Dipped}";
+            var stringBuilder = new StringBuilder(base.ToString());
+            stringBuilder.AppendLine($"\nDipped: {Dipped}");
+            return stringBuilder.ToString();
         }
     }
 }

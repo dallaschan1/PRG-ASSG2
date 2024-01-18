@@ -17,14 +17,17 @@ namespace Assignment2
         public Order()
         {
             IceCreamList = new List<IceCream>();
+            Id = 0;
+            TimeRecieved = DateTime.MinValue;
+            TimeFulfilled = null;
         }
 
-        public Order(int id, DateTime timeRecieved, DateTime? timeFulfilled, List<IceCream>iceCreamList)
+        public Order(int id, DateTime timeRecieved)
         {
             Id = id;
             TimeRecieved = timeRecieved;
-            TimeFulfilled = timeFulfilled;
-            IceCreamList = iceCreamList;
+            TimeFulfilled = null;
+            IceCreamList = new List<IceCream>();
         }
 
         public void AddIceCream(IceCream iceCream)
@@ -199,16 +202,23 @@ namespace Assignment2
 
         public override string ToString()
         {
-            string timeFulfilledStr = TimeFulfilled.HasValue ? TimeFulfilled.Value.ToString() : "Not Fulfilled";
+            string timeFulfilledStr = TimeFulfilled.HasValue ? TimeFulfilled.Value.ToString("g") : "Not Fulfilled";
+            string timeReceivedStr = TimeRecieved.ToString("g");
 
             string iceCreamDetails = "";
+            int iceCreamCount = 1;
             foreach (IceCream iceCream in IceCreamList)
             {
-                iceCreamDetails += iceCream.ToString() + "\n"; 
+                iceCreamDetails += $"  Ice Cream #{iceCreamCount}:\n    {iceCream.ToString().Replace("\n", "\n    ")}\n";
+                iceCreamCount++;
             }
 
-            return $"Order ID: {Id}, TimeReceived: {TimeRecieved}, TimeFulfilled: {timeFulfilledStr},\nIce Creams: \n{iceCreamDetails}";
+            return $"Order ID: {Id}\n" +
+                   $"Time Received: {timeReceivedStr}\n" +
+                   $"Time Fulfilled: {timeFulfilledStr}\n" +
+                   $"Ice Creams:\n{iceCreamDetails}";
         }
+
 
 
 

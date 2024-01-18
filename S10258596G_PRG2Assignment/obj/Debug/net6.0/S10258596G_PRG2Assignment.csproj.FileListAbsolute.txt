@@ -26,3 +26,17 @@ C:\Sem 2 2023\PRG2\Assignment\Program\S10258596G_PRG2Assignment\obj\Debug\net6.0
 C:\Sem 2 2023\PRG2\Assignment\Program\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.pdb
 C:\Sem 2 2023\PRG2\Assignment\Program\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.genruntimeconfig.cache
 C:\Sem 2 2023\PRG2\Assignment\Program\S10258596G_PRG2Assignment\obj\Debug\net6.0\ref\S10258596G_PRG2Assignment.dll
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\bin\Debug\net6.0\S10258596G_PRG2Assignment.exe
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\bin\Debug\net6.0\S10258596G_PRG2Assignment.deps.json
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\bin\Debug\net6.0\S10258596G_PRG2Assignment.runtimeconfig.json
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\bin\Debug\net6.0\S10258596G_PRG2Assignment.dll
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\bin\Debug\net6.0\S10258596G_PRG2Assignment.pdb
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.GeneratedMSBuildEditorConfig.editorconfig
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.AssemblyInfoInputs.cache
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.AssemblyInfo.cs
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.csproj.CoreCompileInputs.cache
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.dll
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\refint\S10258596G_PRG2Assignment.dll
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.pdb
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\S10258596G_PRG2Assignment.genruntimeconfig.cache
+C:\prg\PRG-ASSG2\S10258596G_PRG2Assignment\obj\Debug\net6.0\ref\S10258596G_PRG2Assignment.dll
