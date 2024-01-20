@@ -163,11 +163,11 @@ namespace Assignment2
                         if (!isNewOrder)
                         {
                             orderHistory.Add(newOrder);
-                            orderDic[id].IceCreamList.Add(newIceCream);
+                            orderDic.Add(id, newOrder);
                         }
                         else
                         {
-                            orderDic.Add(id, newOrder);
+                            orderDic[id].IceCreamList.Add(newIceCream);
                         }
                     }
                 }
