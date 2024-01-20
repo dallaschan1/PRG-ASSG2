@@ -163,10 +163,6 @@ namespace Assignment2
                         if (!isNewOrder)
                         {
                             orderHistory.Add(newOrder);
-                        }
-
-                        if (orderDic.ContainsKey(id))
-                        {
                             orderDic[id].IceCreamList.Add(newIceCream);
                         }
                         else
