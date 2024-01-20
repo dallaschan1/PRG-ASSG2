@@ -178,10 +178,6 @@ namespace Assignment2
             }
             OrderCreation();
 
-            void DisplayOrderCreation()
-            {
-
-            }
 
 
         // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
