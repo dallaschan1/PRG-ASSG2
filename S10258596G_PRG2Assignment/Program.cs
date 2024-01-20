@@ -141,9 +141,9 @@ namespace Assignment2
                         Order newOrder = new Order(id, timeReceived);
                         newOrder.TimeFulfilled = timeFulfilled;
 
-                      
-                      
-                        
+
+
+
                         // Finish creating order for customer
                         int memberID = Int32.Parse(details[1]);
                         Customer customer = customerDic[memberID];
@@ -163,7 +163,16 @@ namespace Assignment2
                         if (!isNewOrder)
                         {
                             orderHistory.Add(newOrder);
-                        }                        
+                        }
+
+                        if (orderDic.ContainsKey(id))
+                        {
+                            orderDic[id].IceCreamList.Add(newIceCream);
+                        }
+                        else
+                        {
+                            orderDic.Add(id, newOrder);
+                        }
                     }
                 }
             }
@@ -457,6 +466,8 @@ namespace Assignment2
                         Console.WriteLine("Invalid Input. Please enter (yes / no).");
                     }
                 }
+
+                orderDic.Add(selectedCustomer.currentOrder.Id, selectedCustomer.currentOrder);
 
                 if (selectedCustomer.rewards.Tier == "Gold")
                 {
