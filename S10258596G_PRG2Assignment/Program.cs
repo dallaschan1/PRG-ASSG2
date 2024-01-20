@@ -165,16 +165,22 @@ namespace Assignment2
                             orderHistory.Add(newOrder);
                             orderDic.Add(id, newOrder);
                         }
-                        else
-                        {
-                            orderDic[id].IceCreamList.Add(newIceCream);
-                        }
                     }
                 }
             }
             OrderCreation();
 
+            /*
+            void displayOrder()
+            {
+                foreach (KeyValuePair<int, Order> kvp in orderDic)
+                {
+                    Console.WriteLine(kvp.Value.ToString());
+                }
+            }
 
+            displayOrder();
+            */
 
         // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
         void DisplayMenu()
