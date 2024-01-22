@@ -764,7 +764,7 @@ namespace Assignment2
                         string topping;
                         Console.WriteLine("\n------------------------------------------");
                         Console.WriteLine("Toppings Available (+$1)");
-                        Console.WriteLine("1. Sprinkles\n2. Mochi\n3. Sago\n4. Oreos\n");
+                        Console.WriteLine("- Sprinkles\n- Mochi\n- Sago\n- Oreos\n");
                         int i = 1;
                         do
                         {
@@ -784,7 +784,7 @@ namespace Assignment2
 
                 Console.WriteLine("------------------------------------------");
                 Console.WriteLine("Types of Ice Cream:");
-                Console.WriteLine("1. Waffle\n2. Cone\n3. Cup\n");
+                Console.WriteLine("- Waffle\n- Cone\n- Cup\n");
                 string type = GetValidInput("Select Type: ", new List<string> { "waffle", "cone", "cup" });
                 int scoops = GetNumberOfScoops();
                 AddFlavors(scoops);
@@ -802,7 +802,7 @@ namespace Assignment2
                     {
                         Console.WriteLine("\n------------------------------------------");
                         Console.WriteLine("Waffle Flavours:");
-                        Console.WriteLine("1. Red Velvet\n2. Charcoal\n3. Pandan Waffle\n");
+                        Console.WriteLine("- Red Velvet\n- Charcoal\n- Pandan Waffle\n");
                         waffleFlavor = GetValidInput("Select Flavour From Above: ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
                     }
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
