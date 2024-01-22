@@ -435,7 +435,7 @@ namespace Assignment2
                     }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
                 }
-
+            
                 Customer selectedCustomer = customerDic[memberID];
 
                 Order newOrder = new Order();
@@ -444,7 +444,9 @@ namespace Assignment2
                 DateTime timeRecieved = DateTime.Now;
                 DateTime? timefulfilled = null;
 
-                
+                int i = 1;
+                Console.WriteLine();
+                Console.WriteLine($"IceCream #{i}");
                 AddIceCream(selectedCustomer);
 
                 while (true)
@@ -453,6 +455,9 @@ namespace Assignment2
                     string response = Console.ReadLine().ToLower();
                     if (response == "yes")
                     {
+                        i++;
+                        Console.WriteLine();
+                        Console.WriteLine($"IceCream #{i}");
                         AddIceCream(selectedCustomer);
                     }
                     else if (response == "no")
@@ -717,12 +722,16 @@ namespace Assignment2
 
                 void AddFlavors(int numberOfScoops)
                 {
+                    string flavorName;
+                    Console.WriteLine("\n------------------------------------------");
+                    Console.WriteLine("Flavours Available");
+                    Console.WriteLine("Regular Flavours: Vanilla, Chocolate, Strawberry");
+                    Console.WriteLine("Premium Flavors: Durian, Sea Salt, Ube\n");
                     for (int i = 0; i < numberOfScoops; i++)
                     {
-                        string flavorName;
                         do
                         {
-                            Console.Write($"Scoop {i + 1}, what flavor would you like? Regular Flavors: (Vanilla, Chocolate, Strawberry), Premium Flavors: (Durian, Sea salt, Ube): ");
+                            Console.Write($"Scoop {i + 1} flavour: ");
                             flavorName = Console.ReadLine().ToLower();
 
                             if (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName))
@@ -753,26 +762,34 @@ namespace Assignment2
                     if (response == "yes")
                     {
                         string topping;
+                        Console.WriteLine("\n------------------------------------------");
+                        Console.WriteLine("Toppings Available (+$1)");
+                        Console.WriteLine("1. Sprinkles\n2. Mochi\n3. Sago\n4. Oreos\n");
+                        int i = 1;
                         do
                         {
-                            topping = GetValidInput("Which topping do you wish to add? (Sprinkles, Mochi, Sago, Oreos, exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
+                            topping = GetValidInput($"Topping {i}/4 (exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
                             if (topping != "exit")
                             {
                                 toppings.Add(new Topping(topping));
 
 
-                                Console.WriteLine("Added!");
+                                Console.WriteLine($"{topping.ToUpper()} ADDED!");
+                                i++;
                             }
                         }
-                        while (topping != "exit");
+                        while (topping != "exit" && i<=4);
                     }
                 }
 
-
-                string type = GetValidInput("Type of Ice Cream [waffle, cone, cup]: ", new List<string> { "waffle", "cone", "cup" });
+                Console.WriteLine("------------------------------------------");
+                Console.WriteLine("Types of Ice Cream:");
+                Console.WriteLine("1. Waffle\n2. Cone\n3. Cup\n");
+                string type = GetValidInput("Select Type: ", new List<string> { "waffle", "cone", "cup" });
                 int scoops = GetNumberOfScoops();
                 AddFlavors(scoops);
                 AddToppings();
+                Console.WriteLine();
 
 
                 if (type == "waffle")
@@ -780,19 +797,23 @@ namespace Assignment2
                     string waffleFlavor = "original";
 
 
-                    string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no) ", new List<string> { "yes", "no" });
+                    string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no): ", new List<string> { "yes", "no" });
                     if (waffleResponse == "yes")
                     {
-                        waffleFlavor = GetValidInput("Which flavor do u want? (Red velvet, charcoal, or pandan waffle): ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
+                        Console.WriteLine("\n------------------------------------------");
+                        Console.WriteLine("Waffle Flavours:");
+                        Console.WriteLine("1. Red Velvet\n2. Charcoal\n3. Pandan Waffle\n");
+                        waffleFlavor = GetValidInput("Select Flavour From Above: ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
                     }
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
+                    Console.WriteLine();
                     
                 }
                 else if (type == "cone")
                 {
                     bool dipped = false;
-                    string coneResponse = GetValidInput("Do you wish to dip your cone in chocolate? (yes / no) ", new List<string> { "yes", "no" });
+                    string coneResponse = GetValidInput("Do you wish to dip your cone in chocolate? (yes / no): ", new List<string> { "yes", "no" });
                     if (coneResponse == "yes")
                     {
                         dipped = true;
@@ -801,11 +822,13 @@ namespace Assignment2
 
                     IceCream newOne = new Cone(type, scoops, flavours, toppings, dipped);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
+                    Console.WriteLine();
                 }
                 else if (type == "cup")
                 {
                     IceCream newOne = new Cup(type, scoops, flavours, toppings);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
+                    Console.WriteLine();
                 }
 
                 selectedCustomer.currentOrder.Id = orderDic.Count + 1;
