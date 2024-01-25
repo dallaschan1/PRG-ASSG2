@@ -10,17 +10,16 @@ using System.Text.RegularExpressions;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 
+
 namespace Assignment2
 {
-
-
     class Program
     {
         static void Main(string[] args)
         {
             Queue<Order> NormalQueue = new Queue<Order>();
             Queue<Order> GoldQueue = new Queue<Order>();
-            Dictionary<int, Customer> customerDic = new Dictionary<int, Customer>();
+            Dictionary<string, Customer> customerDic = new Dictionary<string, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
          
 
@@ -40,7 +39,7 @@ namespace Assignment2
                         PointCard pointCard = new PointCard(Int32.Parse(details[4]),Int32.Parse(details[5]));
                         Customer customerNew = new Customer(details[0], Convert.ToInt32(details[1]), dob);
                         customerNew.rewards = pointCard;
-                        customerDic.Add(customerNew.memberId, customerNew);
+                        customerDic.Add(details[1], customerNew);
 
                     }
                 }
@@ -146,7 +145,7 @@ namespace Assignment2
 
                         // Finish creating order for customer
                         int memberID = Int32.Parse(details[1]);
-                        Customer customer = customerDic[memberID];
+                        Customer customer = customerDic[details[1]];
                         List<Order> orderHistory = customer.orderHistory;
                         bool isNewOrder = false;
                         newOrder.IceCreamList = iceCreamList;
@@ -192,6 +191,7 @@ namespace Assignment2
                 Console.WriteLine("[4] Create a customer’s order");
                 Console.WriteLine("[5] Display order details of a customer");
                 Console.WriteLine("[6] Modify order details");
+                Console.WriteLine("[7] Process an order and checkout");
                 Console.WriteLine("[0] Exit Program");
                 Console.WriteLine("------------------------------------------");
             }
@@ -205,22 +205,22 @@ namespace Assignment2
                         Console.Write("Enter your option: ");
                         int option = int.Parse(Console.ReadLine());
 
-                        if (option >= 0 && option <= 6) // Included 0 as a valid option
+                        if (option >= 0 && option <= 7) // Included 0 as a valid option
                         {
                             return option;
                         }
                         else
                         {
-                            Console.WriteLine("Invalid input. Please enter a number between 0 and 6.");
+                            Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
                         }
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 6.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 6.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
                     }
                 } while (true);
             }
@@ -257,6 +257,9 @@ namespace Assignment2
                     case 6:
                         Option6();
                         break;
+                    case 7:
+                        Option7();
+                        break;
                 }
                 return false;
             }
@@ -276,10 +279,10 @@ namespace Assignment2
             {
                 // 1) List all customers - display the information of all the customers
                 Console.WriteLine($"{"Name",-10} \t{"Member ID",-6} \t{"Date Of Birth",-10} \t{"Tier",-8} \t{"Points",-6} \t{"PunchCard",-9}");
-                foreach (KeyValuePair<int, Customer> kvp in customerDic)
+                foreach (KeyValuePair<string, Customer> kvp in customerDic)
                 {
                     Customer customer = kvp.Value;
-                    Console.WriteLine($"{customer.name,-10} \t{customer.memberId,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
+                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
                 }
                 Console.WriteLine();
             }
@@ -303,7 +306,7 @@ namespace Assignment2
             void Option3()
             {
                 string name = "";
-                int id = 0;
+                string id = "";
                 DateTime dob;
 
                 while (true)
@@ -331,15 +334,14 @@ namespace Assignment2
                     try
                     {
                         Console.Write("Enter Customer ID: ");
-                        string input = Console.ReadLine();
-                        if (input == "")
+                        id = Console.ReadLine();
+                        if (id == "")
                         {
                             Console.WriteLine("CustomerID cannot be empty. Please try again.\n");
                         }
                         else
                         {
-                            id = Int32.Parse(input);
-                            if (!Regex.IsMatch(input, @"^\d{6}$"))
+                            if (!Regex.IsMatch(id, @"^\d{6}$"))
                             {
                                 Console.WriteLine("MemberID should be 6 numbers long.\n");
                             }
@@ -380,8 +382,8 @@ namespace Assignment2
                     }
                 }
 
-                Customer newCustomer = new Customer(name, id, dob);
-                customerDic.Add(newCustomer.memberId, newCustomer);
+                Customer newCustomer = new Customer(name, Int32.Parse(id), dob);
+                customerDic.Add(id, newCustomer);
 
                 string data = $"{name},{id},{dob.ToString("d/M/yyyy")},{newCustomer.rewards.Tier},{newCustomer.rewards.Points},{newCustomer.rewards.PunchCard}";
 
@@ -396,30 +398,29 @@ namespace Assignment2
             {
                 // list the customers from the customers.csv
                 Console.WriteLine($"{"Name",-10} \t{"Member ID",-6} \t{"Date Of Birth",-10} \t{"Tier",-8} \t{"Points",-6} \t{"PunchCard",-9}");
-                foreach (KeyValuePair<int, Customer> kvp in customerDic)
+                foreach (KeyValuePair<string, Customer> kvp in customerDic)
                 {
                     Customer customer = kvp.Value;
-                    Console.WriteLine($"{customer.name,-10} \t{customer.memberId,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier,-8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
+                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier,-8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
                 }
                 Console.WriteLine();
 
 
                 // prompt user to select a customer and retrieve the selected customer
-                int memberID = 0;
+                string memberID;
                 while (true)
                 {
                     try
                     {
                         Console.Write("Select Customer (Enter MemberID): ");
-                        string input = Console.ReadLine();
-                        if (input == "")
+                        memberID = Console.ReadLine();
+                        if (memberID == "")
                         {
                             Console.WriteLine("CustomerID cannot be empty. Please try again.\n");
                         }
                         else
                         {
-                            memberID = Int32.Parse(input);
-                            if (!Regex.IsMatch(input, @"^\d{6}$"))
+                            if (!Regex.IsMatch(memberID, @"^\d{6}$"))
                             {
                                 Console.WriteLine("MemberID should be 6 numbers long.\n");
                             }
@@ -437,6 +438,12 @@ namespace Assignment2
                 }
             
                 Customer selectedCustomer = customerDic[memberID];
+
+                if (selectedCustomer.currentOrder.Id != 0)
+                {
+                    Console.WriteLine("Customer already has a current order. Proceed to Option 6 if customer wants to modify order\n");
+                    return;
+                }
 
                 Order newOrder = new Order();
 
@@ -486,8 +493,6 @@ namespace Assignment2
 
             void Option5()
             {
-
-
                 if (customerDic.Count > 0)
                 {
                     Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
@@ -499,10 +504,11 @@ namespace Assignment2
                     }
                     Console.Write("Which Customer do you wish to select (ID): ");
 
-                    int customerId;
+                    string customerId;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out customerId) &&
+                       customerId = Console.ReadLine();
+                        if ((customerId != "") &&
                             customerDic.TryGetValue(customerId, out Customer selectedCustomer))
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
@@ -550,16 +556,17 @@ namespace Assignment2
                    
                     Console.Write("Which Customer do you wish to select (ID or 0 to exit): ");
 
-                    int customerId;
+                    string customerId;
                     while (true)
                     {
                         string inputs = Console.ReadLine();
-                        if (int.TryParse(inputs, out customerId) &&
+                        customerId = inputs;
+                        if ((customerId != "") &&
                             customerDic.TryGetValue(customerId, out selectedCustomer))
                         {
                             break;
                         }
-                        else if (customerId == 0)
+                        else if (customerId == "0")
                         {
                             return;
                         }
@@ -628,6 +635,38 @@ namespace Assignment2
                 }
             }
 
+            void Option7()
+            {
+                Order processOrder;
+                if (GoldQueue.Count() != 0)
+                {
+                    processOrder = GoldQueue.Peek();
+                    GoldQueue.Dequeue();
+                }
+                else if (NormalQueue.Count() == 0)
+                {
+                    Console.WriteLine("No orders to process & checkout.\n");
+                    return;
+                }
+                else
+                {
+                    processOrder = NormalQueue.Peek();
+                    NormalQueue.Dequeue();
+                }
+
+                Console.WriteLine("\nOrder Detail");
+                Console.WriteLine("------------------------------------------\n");
+
+                Console.WriteLine(processOrder.ToString());
+
+                double totalBill = 0.00;
+                foreach (IceCream icecream in processOrder.IceCreamList)
+                {
+                    totalBill += icecream.CalculatePrice();
+                }
+                Console.WriteLine("------------------------------------------");
+                Console.WriteLine($"Total Bill Amount: ${totalBill}\n");
+            }
 
 
             void DeleteIceCream(Customer selectedCustomer)
