@@ -638,6 +638,7 @@ namespace Assignment2
             void Option7()
             {
                 Order processOrder;
+
                 if (GoldQueue.Count() != 0)
                 {
                     processOrder = GoldQueue.Peek();
@@ -655,19 +656,100 @@ namespace Assignment2
                 }
 
                 Console.WriteLine("\nOrder Detail");
-                Console.WriteLine("------------------------------------------\n");
-
+                Console.WriteLine("------------------------------------------");
                 Console.WriteLine(processOrder.ToString());
 
                 double totalBill = 0.00;
+                double mostExPriceOfIceCream = 0.00;
+                IceCream mostExIceCream = null;
+
                 foreach (IceCream icecream in processOrder.IceCreamList)
                 {
-                    totalBill += icecream.CalculatePrice();
-                }
-                Console.WriteLine("------------------------------------------");
-                Console.WriteLine($"Total Bill Amount: ${totalBill}\n");
-            }
+                    double priceOfIceCream = icecream.CalculatePrice();
+                    totalBill += priceOfIceCream;
 
+                    if (mostExPriceOfIceCream < priceOfIceCream)
+                    {
+                        mostExPriceOfIceCream = priceOfIceCream;
+                        mostExIceCream = icecream;
+                    }
+                }
+
+                Console.WriteLine("------------------------------------------");
+                Console.WriteLine($"Total Bill Amount: ${totalBill:0.00}");
+
+                Customer processCustomer = null;
+
+                foreach (KeyValuePair<string, Customer> kvp in customerDic)
+                {
+                    if (kvp.Value.currentOrder == processOrder)
+                    {
+                        processCustomer = kvp.Value;
+                        break;
+                    }
+                }
+
+                if (processCustomer != null)
+                {
+                    if (processCustomer.dob.ToString("dd/MM") == processCustomer.currentOrder.TimeRecieved.ToString("dd/MM"))
+                    {
+                        totalBill -= mostExPriceOfIceCream;
+                    }
+
+                    if (processCustomer.rewards.PunchCard == 10)
+                    {
+                        totalBill -= processOrder.IceCreamList[0].CalculatePrice();
+                    }
+
+                    if (processCustomer.rewards.Points != 0 && processCustomer.rewards.Tier != "Ordinary")
+                    {
+                        Console.WriteLine("------------------------------------------");
+                        Console.WriteLine($"Membership Tier: {processCustomer.rewards.Tier}");
+                        Console.WriteLine($"Point Balance: {processCustomer.rewards.Points}");
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.Write("How many points do you want to apply to your bill (1 point = $0.02): ");
+                                int redeemedPoints = Int32.Parse(Console.ReadLine());
+                                if (redeemedPoints > processCustomer.rewards.Points)
+                                {
+                                    Console.WriteLine("Insufficient Points. Please try again within your point balance.\n");
+                                }
+                                else
+                                {
+                                    processCustomer.rewards.RedeemPoints(redeemedPoints);
+                                    totalBill -= (redeemedPoints * 0.02);
+                                    break;
+                                }
+                            }
+                            catch (FormatException e) {
+                                Console.WriteLine("Invalid Input. Please enter number within your point balance.\n"); 
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("ERROR OCCURED!!!");
+                                break;
+                            }
+                        }
+                    }
+
+                    Console.WriteLine($"Total Bill Amount (Applied Discount): ${totalBill:0.00}");
+                    Console.Write("(Press any key to make payment)");
+                    Console.ReadKey();
+                    Console.WriteLine();
+                    processCustomer.rewards.Punch();
+                    processCustomer.rewards.AddPoints((int)Math.Round(totalBill));
+                    processCustomer.currentOrder.TimeFulfilled = DateTime.Now;
+                    processCustomer.orderHistory.Add(processOrder);
+                    processCustomer.currentOrder = new Order();
+                    Console.WriteLine("Payment Successful!\n");
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: No matching order found."); // Handle the case when no match is found
+                }
+            }
 
             void DeleteIceCream(Customer selectedCustomer)
             {
@@ -718,8 +800,9 @@ namespace Assignment2
 
             void AddIceCream(Customer selectedCustomer)
             {
-                List<string> normalFlavor = new List<string>() { "vanilla", "chocolate", "strawberry" };
-                List<string> specialFlavor = new List<string>() { "durian", "ube", "sea salt" };
+                Dictionary<string, string> normalFlavor = new Dictionary<string, string>() { { "1", "vanilla" }, { "2", "chocolate" }, { "3", "strawberry" } };
+                Dictionary<string, string> specialFlavor = new Dictionary<string, string>() { { "4", "durian" }, { "5", "ube" }, { "6", "sea salt" } };
+                Dictionary<string, string> iceCreamType = new Dictionary<string, string>() { { "1", "cup" }, { "2", "cone" }, { "3", "waffle" } };
                 List<Flavour> flavours = new List<Flavour>();
                 List<Topping> toppings = new List<Topping>();
 
@@ -751,37 +834,46 @@ namespace Assignment2
 
                 int GetNumberOfScoops()
                 {
-                    return GetValidInput("How many scoops do you want? (Single, Double or Triple): ", new List<string> { "single", "double", "triple" }) switch
+                    return GetValidInput("How many scoops do you want (1-3)?: ", new List<string> { "1", "2", "3" }) switch
                     {
-                        "single" => 1,
-                        "double" => 2,
-                        "triple" => 3
+                        "1" => 1,
+                        "2" => 2,
+                        "3" => 3
                     };
                 }
 
                 void AddFlavors(int numberOfScoops)
                 {
-                    string flavorName;
+                    string chosenFlavour;
                     Console.WriteLine("\n------------------------------------------");
-                    Console.WriteLine("Flavours Available");
-                    Console.WriteLine("Regular Flavours: Vanilla, Chocolate, Strawberry");
-                    Console.WriteLine("Premium Flavors: Durian, Sea Salt, Ube\n");
+                    Console.WriteLine("Regular Flavours: \n1. Vanilla\n2. Chocolate\n3. Strawberry\n");
+                    Console.WriteLine("Premium Flavors: \n4. Durian\n5. Sea Salt\n6. Ube\n");
                     for (int i = 0; i < numberOfScoops; i++)
                     {
                         do
                         {
                             Console.Write($"Scoop {i + 1} flavour: ");
-                            flavorName = Console.ReadLine().ToLower();
+                            chosenFlavour = Console.ReadLine();
 
-                            if (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName))
+                            if (!normalFlavor.ContainsKey(chosenFlavour) && !specialFlavor.ContainsKey(chosenFlavour))
                             {
                                 Console.WriteLine("Error: Invalid flavor. Please choose a valid flavor.");
                             }
                         }
-                        while (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName));
+                        while (!normalFlavor.ContainsKey(chosenFlavour) && !specialFlavor.ContainsKey(chosenFlavour));
 
-                        bool isPremium = specialFlavor.Contains(flavorName);
+                        bool isPremium = specialFlavor.ContainsKey(chosenFlavour);
 
+                        string flavorName = "";
+
+                        if (normalFlavor.ContainsKey(chosenFlavour))
+                        {
+                            flavorName = normalFlavor[chosenFlavour];
+                        }
+                        else
+                        {
+                            flavorName = specialFlavor[chosenFlavour];
+                        }
 
                         Flavour existingFlavour = flavours.FirstOrDefault(f => f.Type == flavorName);
                         if (existingFlavour != null)
@@ -803,11 +895,14 @@ namespace Assignment2
                         string topping;
                         Console.WriteLine("\n------------------------------------------");
                         Console.WriteLine("Toppings Available (+$1)");
-                        Console.WriteLine("- Sprinkles\n- Mochi\n- Sago\n- Oreos\n");
+                        Console.WriteLine("1. Sprinkles\n2. Mochi\n3. Sago\n4. Oreos\n");
                         int i = 1;
                         do
                         {
-                            topping = GetValidInput($"Topping {i}/4 (exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
+                            Dictionary<string, string> toppingDic = new Dictionary<string, string> { { "1", "sprinkles" }, { "2", "mochi" }, { "3", "sago" }, { "4", "oreos" }, { "0", "exit" } };
+                            string input = GetValidInput($"Topping {i}/4 (0 to finish): ", new List<string> { "1", "2", "3", "4", "0" });
+                            topping = toppingDic[input];
+
                             if (topping != "exit")
                             {
                                 toppings.Add(new Topping(topping));
@@ -817,18 +912,18 @@ namespace Assignment2
                                 i++;
                             }
                         }
-                        while (topping != "exit" && i<=4);
+                        while (topping != "exit" && i <= 4);
                     }
                 }
 
                 Console.WriteLine("------------------------------------------");
                 Console.WriteLine("Types of Ice Cream:");
-                Console.WriteLine("- Waffle\n- Cone\n- Cup\n");
-                string type = GetValidInput("Select Type: ", new List<string> { "waffle", "cone", "cup" });
+                Console.WriteLine("1. Cup\n2. Cone\n3. Waffle\n");
+                string typeInput = GetValidInput("Select Type: ", new List<string> { "1", "2", "3" });
+                string type = iceCreamType[typeInput];
                 int scoops = GetNumberOfScoops();
                 AddFlavors(scoops);
                 AddToppings();
-                Console.WriteLine();
 
 
                 if (type == "waffle")
@@ -847,7 +942,7 @@ namespace Assignment2
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                     Console.WriteLine();
-                    
+
                 }
                 else if (type == "cone")
                 {

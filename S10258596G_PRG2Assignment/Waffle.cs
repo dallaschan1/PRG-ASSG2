@@ -23,7 +23,6 @@ namespace Assignment2
             double doubleScopp = 8.50;
             double threeScoop = 9.50;
             double totalPrice = 0.00;
-            double totalFlavourPrice = 0.00;
 
             // Adding Price depending on the number of scoops ordered
             switch (Scoops)
@@ -35,7 +34,7 @@ namespace Assignment2
                     totalPrice += doubleScopp;
                     break;
                 case 3:
-                    totalPrice -= threeScoop;
+                    totalPrice += threeScoop;
                     break;
             }
 
@@ -53,7 +52,7 @@ namespace Assignment2
             totalPrice += toppingPrice;
 
             // Adding any additional fees for flavoured waffles
-            if (WaffleFlavour != "Original")
+            if (WaffleFlavour != "original")
             {
                 totalPrice += 3.00;
             }

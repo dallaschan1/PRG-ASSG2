@@ -30,7 +30,7 @@ namespace Assignment2
                     totalPrice += doubleScopp;
                     break;
                 case 3:
-                    totalPrice -= threeScoop;
+                    totalPrice += threeScoop;
                     break;
             }
 
