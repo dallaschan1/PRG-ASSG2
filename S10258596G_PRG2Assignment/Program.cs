@@ -582,7 +582,7 @@ namespace Assignment2
 
                 Console.WriteLine(selectedCustomer.currentOrder);
 
-                Console.WriteLine("\nChoose an action for the ice cream order:");
+                Console.WriteLine("Choose an action for the ice cream order:");
                 Console.WriteLine("[1] Modify an existing ice cream");
                 Console.WriteLine("[2] Add a new ice cream");
                 Console.WriteLine("[3] Delete an existing ice cream");
@@ -621,6 +621,7 @@ namespace Assignment2
 
                     case "2":
                         AddIceCream(selectedCustomer);
+                        selectedCustomer.currentOrder.Id -= 1;
                         Console.WriteLine("Successfully Added!");
                         break;
 
@@ -662,6 +663,7 @@ namespace Assignment2
                 double totalBill = 0.00;
                 double mostExPriceOfIceCream = 0.00;
                 IceCream mostExIceCream = null;
+                List<IceCream> iceCreamList = processOrder.IceCreamList;
 
                 foreach (IceCream icecream in processOrder.IceCreamList)
                 {
@@ -689,11 +691,14 @@ namespace Assignment2
                     }
                 }
 
+                Console.WriteLine($"Most Expensive IceCream: {mostExIceCream}");
+
                 if (processCustomer != null)
                 {
                     if (processCustomer.dob.ToString("dd/MM") == processCustomer.currentOrder.TimeRecieved.ToString("dd/MM"))
                     {
                         totalBill -= mostExPriceOfIceCream;
+                        iceCreamList.Remove(mostExIceCream);
                     }
 
                     if (processCustomer.rewards.PunchCard == 10)

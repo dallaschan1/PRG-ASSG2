@@ -63,7 +63,7 @@ namespace Assignment2
 
         public override string ToString()
         {
-            string currentOrderString = currentOrder != null ? "Yes" : "No";
+            string currentOrderString = currentOrder.Id != 0 ? "Yes" : "No";
 
            
             string orderHistoryString = orderHistory != null ? $"{orderHistory.Count}" : "Order History: None";
