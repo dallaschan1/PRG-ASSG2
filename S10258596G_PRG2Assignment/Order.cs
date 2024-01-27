@@ -11,7 +11,7 @@ namespace Assignment2
     internal class Order
     {
         public int Id;
-        public DateTime TimeRecieved { get; set; }
+        public DateTime TimeReceived { get; set; }
         public DateTime? TimeFulfilled { get; set; }
         public List<IceCream> IceCreamList { get; set; }
 
@@ -19,14 +19,14 @@ namespace Assignment2
         {
             IceCreamList = new List<IceCream>();
             Id = 0;
-            TimeRecieved = DateTime.MinValue;
+            TimeReceived = DateTime.MinValue;
             TimeFulfilled = null;
         }
 
         public Order(int id, DateTime timeRecieved)
         {
             Id = id;
-            TimeRecieved = timeRecieved;
+            TimeReceived = timeRecieved;
             TimeFulfilled = null;
             IceCreamList = new List<IceCream>();
         }
@@ -204,7 +204,7 @@ namespace Assignment2
         public override string ToString()
         {
             string timeFulfilledStr = TimeFulfilled.HasValue ? TimeFulfilled.Value.ToString("g") : "Not Fulfilled";
-            string timeReceivedStr = TimeRecieved.ToString("g");
+            string timeReceivedStr = TimeReceived.ToString("g");
 
             string iceCreamDetails = "";
             int iceCreamCount = 1;

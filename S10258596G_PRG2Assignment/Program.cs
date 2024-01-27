@@ -21,7 +21,8 @@ namespace Assignment2
             Queue<Order> GoldQueue = new Queue<Order>();
             Dictionary<string, Customer> customerDic = new Dictionary<string, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
-         
+            Dictionary<string, double> monthYearData = new Dictionary<string, double>();
+
 
             // Create customers and orders from the given data files at the onset. 
             void CustomerCreation()
@@ -74,9 +75,12 @@ namespace Assignment2
                     {
                         string[] details = s.Split(',');
                         int id = Convert.ToInt32(details[0]);
-                        DateTime timeReceived = DateTime.ParseExact(details[2], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                        string[] formats = { "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm", "d/MM/yyyy HH:mm", "dd/M/yyyy HH:mm" };
+                        bool success = DateTime.TryParseExact(details[2], formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime timeReceived);
                         DateTime? timeFulfilled;
-                        timeFulfilled = DateTime.ParseExact(details[3], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+
+                        
+                        timeFulfilled = DateTime.ParseExact(details[3], formats, CultureInfo.InvariantCulture);
 
                         // Creating individual IceCreams
                         string option = details[4];
@@ -164,6 +168,22 @@ namespace Assignment2
                             orderHistory.Add(newOrder);
                             orderDic.Add(id, newOrder);
                         }
+                        double price = newIceCream.CalculatePrice();
+
+                        // Create a key for the dictionary using the month and year of timeReceived
+                        string monthYearKey = timeReceived.ToString("MMM yyyy");
+
+                        // Check if the monthYearKey already exists in the dictionary
+                        if (monthYearData.ContainsKey(monthYearKey))
+                        {
+                            // If key exists, add the price to the existing value
+                            monthYearData[monthYearKey] += price;
+                        }
+                        else
+                        {
+                            // If key does not exist, add a new entry with the key and price
+                            monthYearData.Add(monthYearKey, price);
+                        }
                     }
                 }
             }
@@ -192,6 +212,7 @@ namespace Assignment2
                 Console.WriteLine("[5] Display order details of a customer");
                 Console.WriteLine("[6] Modify order details");
                 Console.WriteLine("[7] Process an order and checkout");
+                Console.WriteLine("[8] Display monthly charged amounts breakdown & total charged amounts for the year");
                 Console.WriteLine("[0] Exit Program");
                 Console.WriteLine("------------------------------------------");
             }
@@ -205,7 +226,7 @@ namespace Assignment2
                         Console.Write("Enter your option: ");
                         int option = int.Parse(Console.ReadLine());
 
-                        if (option >= 0 && option <= 7) // Included 0 as a valid option
+                        if (option >= 0 && option <= 8) // Included 0 as a valid option
                         {
                             return option;
                         }
@@ -260,6 +281,9 @@ namespace Assignment2
                     case 7:
                         Option7();
                         break;
+                    case 8:
+                        Option8();
+                        break;
                 }
                 return false;
             }
@@ -282,7 +306,7 @@ namespace Assignment2
                 foreach (KeyValuePair<string, Customer> kvp in customerDic)
                 {
                     Customer customer = kvp.Value;
-                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToShortDateString(),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
+                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToString("d/M/yyyy"),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
                 }
                 Console.WriteLine();
             }
@@ -493,6 +517,7 @@ namespace Assignment2
 
             void Option5()
             {
+                Console.WriteLine();
                 if (customerDic.Count > 0)
                 {
                     Console.WriteLine($"{"Name",-15}{"Member ID",-15}{"Date of Birth",-15}{"Tier",-10}{"Points",-10}{"Punch Card",-15}{"Order History Count",-20}{"Currently Ordering",-25}");
@@ -513,6 +538,7 @@ namespace Assignment2
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
                             {
+                                Console.WriteLine();
                                 foreach (Order order in selectedCustomer.orderHistory)
                                 {
                                     Console.WriteLine($"{order}");
@@ -536,6 +562,7 @@ namespace Assignment2
 
             void Option6()
             {
+                Console.WriteLine();
                 if (customerDic.Count == 0)
                 {
                     Console.WriteLine("There are no customers.");
@@ -691,7 +718,7 @@ namespace Assignment2
 
                 if (processCustomer != null)
                 {
-                    if (processCustomer.dob.ToString("dd/MM") == processCustomer.currentOrder.TimeRecieved.ToString("dd/MM"))
+                    if (processCustomer.IsBirthday())
                     {
                         totalBill -= mostExPriceOfIceCream;
                     }
@@ -699,6 +726,7 @@ namespace Assignment2
                     if (processCustomer.rewards.PunchCard == 10)
                     {
                         totalBill -= processOrder.IceCreamList[0].CalculatePrice();
+                        processCustomer.rewards.PunchCard = 0;
                     }
 
                     if (processCustomer.rewards.Points != 0 && processCustomer.rewards.Tier != "Ordinary")
@@ -718,9 +746,20 @@ namespace Assignment2
                                 }
                                 else
                                 {
-                                    processCustomer.rewards.RedeemPoints(redeemedPoints);
-                                    totalBill -= (redeemedPoints * 0.02);
-                                    break;
+                                    if (redeemedPoints < 0)
+                                    {
+                                        Console.WriteLine("Invalid Input. Please enter a positive number.\n");
+                                    }
+                                    else if (redeemedPoints > processCustomer.rewards.Points)
+                                    {
+                                        Console.WriteLine("Insufficient Points. Please try again within your point balance.\n");
+                                    }
+                                    else
+                                    {
+                                        processCustomer.rewards.RedeemPoints(redeemedPoints);
+                                        totalBill -= (redeemedPoints * 0.02);
+                                        break;
+                                    }
                                 }
                             }
                             catch (FormatException e) {
@@ -741,15 +780,68 @@ namespace Assignment2
                     processCustomer.rewards.Punch();
                     processCustomer.rewards.AddPoints((int)Math.Round(totalBill));
                     processCustomer.currentOrder.TimeFulfilled = DateTime.Now;
+                    
+                    Console.WriteLine("Payment Successful!\n");
+                    string monthYearKey = processCustomer.currentOrder.TimeFulfilled.Value.ToString("MMM yyyy");
+                    if (monthYearData.ContainsKey(monthYearKey))
+                    {
+                        monthYearData[monthYearKey] += totalBill;
+                    }
+                    else
+                    {
+                        monthYearData.Add(monthYearKey, totalBill);
+                    }
                     processCustomer.orderHistory.Add(processOrder);
                     processCustomer.currentOrder = new Order();
-                    Console.WriteLine("Payment Successful!\n");
                 }
                 else
                 {
                     Console.WriteLine("ERROR: No matching order found."); // Handle the case when no match is found
                 }
             }
+
+            void Option8()
+            {
+                Console.Write("Enter the year: ");
+                int year;
+                while (true)
+                {
+                    if (int.TryParse(Console.ReadLine(), out year))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.Write("Invalid input. Please enter a valid year: ");
+                    }
+                }
+                Console.WriteLine("\n\n") ;
+                double yearlyTotal = 0.00;
+                
+
+                // Iterate over each month of the year
+                for (int month = 1; month <= 12; month++)
+                {
+                    // Create a key for the month and year
+                    string monthYearKey = new DateTime(year, month, 1).ToString("MMM yyyy");
+
+                    // Check if the key exists in the dictionary
+                    if (monthYearData.TryGetValue(monthYearKey, out double monthlyTotal))
+                    {
+                        Console.WriteLine($"{monthYearKey}: ${monthlyTotal:0.00}");
+                        yearlyTotal += monthlyTotal;
+                    }
+                    else
+                    {
+                        // If the month does not have data, I print it as $0.00 
+                        Console.WriteLine($"{monthYearKey}: $0.00");
+                    }
+                }
+
+                // Print the total for the year
+                Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}");
+            }
+
 
             void DeleteIceCream(Customer selectedCustomer)
             {
@@ -966,7 +1058,7 @@ namespace Assignment2
                 }
 
                 selectedCustomer.currentOrder.Id = orderDic.Count + 1;
-                selectedCustomer.currentOrder.TimeRecieved = DateTime.Now;
+                selectedCustomer.currentOrder.TimeReceived = DateTime.Now;
                 selectedCustomer.currentOrder.TimeFulfilled = null;
 
             }
