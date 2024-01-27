@@ -1033,8 +1033,9 @@ namespace Assignment2
                     {
                         Console.WriteLine("\n------------------------------------------");
                         Console.WriteLine("Waffle Flavours:");
-                        Console.WriteLine("- Red Velvet\n- Charcoal\n- Pandan Waffle\n");
-                        waffleFlavor = GetValidInput("Select Flavour From Above: ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
+                        Console.WriteLine("1. Red Velvet\n2. Charcoal\n3. Pandan\n");
+                        Dictionary<string, string> waffleDic = new Dictionary<string, string>() { { "1", "Red Velvet" }, { "2", "Charcoal" }, { "3", "Pandan" } };
+                        waffleFlavor = waffleDic[GetValidInput("Select Flavour From Above: ", new List<string> { "1", "2", "3" })];
                     }
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
