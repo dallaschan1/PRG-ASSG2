@@ -55,7 +55,7 @@ namespace Assignment2
 
         public override string ToString()
         {
-            return base.ToString();
+            return base.ToString() + '\n';
         }
     }
 }

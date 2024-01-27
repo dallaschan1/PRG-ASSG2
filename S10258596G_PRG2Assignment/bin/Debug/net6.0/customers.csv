@@ -13,4 +13,10 @@ amelia,233233,16/7/2000,Ordinary,0,0
 Ian,123456,22/9/2006,Ordinary,0,0
 Dallas,001234,17/6/2006,Ordinary,0,0
 Javier,654321,25/1/2024,Ordinary,0,0
+<<<<<<< HEAD
 Luck,111223,27/1/2006,Ordinary,0,0
+=======
+dsd,000000,1/2/2000,Ordinary,0,0
+dfdf,232322,16/12/2000,Ordinary,0,0
+henry,000222,6/12/2000,Ordinary,0,0
+>>>>>>> e6c6a0845ba414176e679c99986963c6ded031a4

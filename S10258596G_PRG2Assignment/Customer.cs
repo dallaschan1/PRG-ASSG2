@@ -51,15 +51,17 @@ namespace Assignment2
         public bool IsBirthday()
         {
             DateTime today = DateTime.Today;
-            if ((today.Day == dob.Day) && (today.Month == dob.Month))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+           
+            bool isBirthday = (today.Day == dob.Day) && (today.Month == dob.Month);
+
+            
+            DateTime orderDate = currentOrder.TimeReceived;
+            isBirthday = isBirthday && (orderDate.Day == dob.Day) && (orderDate.Month == dob.Month);
+
+            return isBirthday;
         }
+
 
         public override string ToString()
         {
@@ -67,10 +69,10 @@ namespace Assignment2
 
            
             string orderHistoryString = orderHistory != null ? $"{orderHistory.Count}" : "Order History: None";
+            string memberIdString = memberId.ToString("D6");
 
 
-
-            return $"{name,-15}{memberId,-15}{dob.ToShortDateString(),-15}{rewards.Tier,-10}{rewards.Points,-10}{rewards.PunchCard, -15}{orderHistoryString,-20}{currentOrderString}";
+            return $"{name,-15}{memberIdString,-15}{dob.ToShortDateString(),-15}{rewards.Tier,-10}{rewards.Points,-10}{rewards.PunchCard, -15}{orderHistoryString,-20}{currentOrderString}";
 
         }
     }
