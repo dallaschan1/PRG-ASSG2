@@ -22,6 +22,14 @@ namespace Assignment2
             Quantity = quantity;
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Flavour other &&
+                   Type == other.Type &&
+                   Premium == other.Premium &&
+                   Quantity == other.Quantity;
+        }
+
         public override string ToString()
         {
             return $"Type: {Type}  Premium: {Premium}  Quantity: {Quantity},  ";

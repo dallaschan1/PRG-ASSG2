@@ -18,7 +18,10 @@ namespace Assignment2
             
             Type = type;
         }
-
+        public override bool Equals(object obj)
+        {
+            return obj is Topping other && Type == other.Type;
+        }
         public override string ToString()
         {
           

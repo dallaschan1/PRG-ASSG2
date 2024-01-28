@@ -22,6 +22,8 @@ namespace Assignment2
             Dictionary<string, Customer> customerDic = new Dictionary<string, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
             Dictionary<string, double> monthYearData = new Dictionary<string, double>();
+            List<IceCream> uniqueIceCreamsList = new List<IceCream>();
+
 
 
             // Create customers and orders from the given data files at the onset. 
@@ -219,6 +221,7 @@ namespace Assignment2
                 Console.WriteLine("[6] Modify order details");
                 Console.WriteLine("[7] Process an order and checkout");
                 Console.WriteLine("[8] Display monthly charged amounts breakdown & total charged amounts for the year");
+                Console.WriteLine("[9] Display All Existing Reviews for our IceCreams");
                 Console.WriteLine("[0] Exit Program");
                 Console.WriteLine("------------------------------------------");
             }
@@ -232,22 +235,22 @@ namespace Assignment2
                         Console.Write("Enter your option: ");
                         int option = int.Parse(Console.ReadLine());
 
-                        if (option >= 0 && option <= 8) // Included 0 as a valid option
+                        if (option >= 0 && option <= 9) // Included 0 as a valid option
                         {
                             return option;
                         }
                         else
                         {
-                            Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                            Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
                         }
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
                     }
                 } while (true);
             }
@@ -289,6 +292,9 @@ namespace Assignment2
                         break;
                     case 8:
                         Option8();
+                        break;
+                    case 9:
+                        Option9();
                         break;
                 }
                 return false;
@@ -835,11 +841,33 @@ namespace Assignment2
                     }
                     processCustomer.orderHistory.Add(processOrder);
                     processCustomer.currentOrder = new Order();
+                    Console.WriteLine("\nPlease provide a review for each ice cream in your order:");
+                    foreach (IceCream iceCream in processOrder.IceCreamList)
+                    {
+                        Console.WriteLine(iceCream.ToString()); 
+                        Review review = GetReview(); 
+
+                        
+                        IceCream matchingIceCream = uniqueIceCreamsList.FirstOrDefault(ic => ic.Equals(iceCream));
+                        if (matchingIceCream != null)
+                        {
+                            
+                            matchingIceCream.Reviews.Add(review);
+                        }
+                        else
+                        {
+                            
+                            iceCream.Reviews.Add(review);
+                            uniqueIceCreamsList.Add(iceCream);
+                        }
+                    }
+
                 }
                 else
                 {
                     Console.WriteLine("ERROR: No matching order found."); // Handle the case when no match is found
                 }
+
             }
 
             void Option8()
@@ -882,6 +910,59 @@ namespace Assignment2
 
                 // Print the total for the year
                 Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}");
+            }
+
+            Review GetReview()
+            {
+                int rating;
+                while (true)
+                {
+                    Console.Write("Please enter a rating (1-5): ");
+                    if (int.TryParse(Console.ReadLine(), out rating) && rating >= 1 && rating <= 5)
+                    {
+                        break;
+                    }
+                    Console.WriteLine("Invalid rating. Please enter a number between 1 and 5.");
+                }
+
+                Console.Write("Please enter a comment: ");
+                string comment = Console.ReadLine();
+
+                return new Review(rating, comment);
+            }
+
+            void Option9()
+            {
+                
+
+                if (uniqueIceCreamsList.Count > 0)
+                {
+                    Console.WriteLine("Ice Cream Reviews\n");
+                    Console.WriteLine("---------------------------------------------------");
+                    foreach (IceCream iceCream in uniqueIceCreamsList)
+                    {
+                        Console.WriteLine(iceCream.ToString()); // Display ice cream details
+
+                        if (iceCream.Reviews.Count > 0)
+                        {
+                            double avgRating = iceCream.Reviews.Average(review => review.Rating);
+                            Console.WriteLine($"Average Rating: {avgRating:0.0} / 5");
+
+                            Console.WriteLine("Comments:");
+                            foreach (Review review in iceCream.Reviews)
+                            {
+                                Console.WriteLine($"- {review.Comment}");
+                            }
+                        }
+
+
+                        Console.WriteLine("---------------------------------------------------");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No reviews available");
+                }
             }
 
 
