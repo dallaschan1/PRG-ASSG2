@@ -35,12 +35,18 @@ namespace Assignment2
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] details = s.Split(',').Select(detail => detail.Trim()).ToArray();
+                        if (details[1].Length < 6)
+                        {
+                            details[1] = details[1].PadLeft(6, '0');
+                        }
 
                         DateTime dob = DateTime.ParseExact(details[2], "d/M/yyyy", CultureInfo.InvariantCulture);
-                        PointCard pointCard = new PointCard(Int32.Parse(details[4]),Int32.Parse(details[5]));
+                        PointCard pointCard = new PointCard(Int32.Parse(details[4]), Int32.Parse(details[5]));
                         Customer customerNew = new Customer(details[0], Convert.ToInt32(details[1]), dob);
                         customerNew.rewards = pointCard;
+
                         customerDic.Add(details[1], customerNew);
+
 
                     }
                 }
@@ -313,19 +319,39 @@ namespace Assignment2
 
             void Option2()
             {
-                Console.WriteLine("Orders in the Normal Queue: ");
+                
 
-                foreach (Order order in NormalQueue)
+                if (NormalQueue.Count == 0)
                 {
-                    Console.WriteLine(order.ToString());
+                    Console.WriteLine("\nNo Orders in the Normal Queue");
                 }
-                Console.WriteLine("Orders in the Gold Queue: ");
-                foreach (Order order in GoldQueue)
+                else
                 {
-                    Console.WriteLine(order.ToString());
+                    Console.WriteLine("\nOrders in the Normal Queue: \n");
+                    foreach (Order order in NormalQueue)
+                    {
+                        Console.WriteLine(order.ToString());
+                    }
                 }
+
+                
+
+                if (GoldQueue.Count == 0)
+                {
+                    Console.WriteLine("\nNo Orders in the Gold Queue");
+                }
+                else
+                {
+                    Console.WriteLine("\nOrders in the Gold Queue: \n");
+                    foreach (Order order in GoldQueue)
+                    {
+                        Console.WriteLine(order.ToString());
+                    }
+                }
+
                 Console.WriteLine();
             }
+
 
             void Option3()
             {
@@ -533,16 +559,27 @@ namespace Assignment2
                     while (true)
                     {
                        customerId = Console.ReadLine();
-                        if ((customerId != "") &&
-                            customerDic.TryGetValue(customerId, out Customer selectedCustomer))
+                        if ((customerId != "") && customerDic.TryGetValue(customerId, out Customer selectedCustomer))
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
                             {
-                                Console.WriteLine();
+                                Console.WriteLine("\nOrder History: ");
+
                                 foreach (Order order in selectedCustomer.orderHistory)
                                 {
                                     Console.WriteLine($"{order}");
                                 }
+
+                                if (selectedCustomer.currentOrder == null || selectedCustomer.currentOrder.Id == 0)
+                                {
+                                    Console.WriteLine("No current order.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Current Order: ");
+                                    Console.WriteLine($"{selectedCustomer.currentOrder}");
+                                }
+
                             }
                             else
                             {
