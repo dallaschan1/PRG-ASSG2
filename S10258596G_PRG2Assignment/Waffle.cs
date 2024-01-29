@@ -43,7 +43,7 @@ namespace Assignment2
             {
                 if (flavour.Premium)
                 {
-                    totalPrice += 2.00;
+                    totalPrice += flavour.Quantity * 2.00;
                 }
             }
 
@@ -52,7 +52,7 @@ namespace Assignment2
             totalPrice += toppingPrice;
 
             // Adding any additional fees for flavoured waffles
-            if (WaffleFlavour != "original")
+            if (WaffleFlavour != "Original")
             {
                 totalPrice += 3.00;
             }

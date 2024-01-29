@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hins8\\Downloads\\adasda\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
+    "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hins8\\Downloads\\adasda\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
+    "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hins8\\Downloads\\adasda\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "projectUniqueName": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
         "projectName": "S10258596G_PRG2Assignment",
-        "projectPath": "C:\\Users\\hins8\\Downloads\\adasda\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
-        "packagesPath": "C:\\Users\\hins8\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hins8\\Downloads\\adasda\\S10258596G_PRG2Assignment\\obj\\",
+        "projectPath": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "packagesPath": "C:\\Users\\ianch\\.nuget\\packages\\",
+        "outputPath": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\hins8\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ianch\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -60,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

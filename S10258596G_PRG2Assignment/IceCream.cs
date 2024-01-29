@@ -36,12 +36,10 @@ namespace Assignment2
             stringBuilder.AppendLine($"Option: {Option}");
             stringBuilder.AppendLine($"Scoops: {Scoops}");
 
-   
             string flavourText = Flavours.Count > 0
                 ? string.Join(", ", Flavours.Select(flavour => $"{flavour.Type} (Premium: {flavour.Premium}, Quantity: {flavour.Quantity})"))
                 : "None";
             stringBuilder.AppendLine($"Flavours: {flavourText}");
-
 
             string toppingText = Toppings.Count > 0
                 ? string.Join(", ", Toppings.Select(topping => topping.Type))

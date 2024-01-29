@@ -72,8 +72,8 @@ namespace Assignment2
             {
                 using (StreamReader sr = new StreamReader("orders.csv"))
                 {
-                   
-                    
+
+
                     string? s = sr.ReadLine(); // read the heading
                     string[] heading = s.Split(',');
 
@@ -85,7 +85,7 @@ namespace Assignment2
                         bool success = DateTime.TryParseExact(details[2], formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime timeReceived);
                         DateTime? timeFulfilled;
 
-                        
+
                         timeFulfilled = DateTime.ParseExact(details[3], formats, CultureInfo.InvariantCulture);
 
                         // Creating individual IceCreams
@@ -97,25 +97,25 @@ namespace Assignment2
                         Dictionary<string, int> flavourCount = new Dictionary<string, int>();
                         for (int i = 8; i < 8 + scoops; i++)
                         {
-                        if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
-                        {
-                        flavourCount.Add(details[i], 1);
-                        }
-                        else if (!string.IsNullOrEmpty(details[i]) && flavourCount.ContainsKey(details[i]))
+                            if (!string.IsNullOrEmpty(details[i]) && !flavourCount.ContainsKey(details[i]))
+                            {
+                                flavourCount.Add(details[i], 1);
+                            }
+                            else if (!string.IsNullOrEmpty(details[i]) && flavourCount.ContainsKey(details[i]))
                             {
                                 flavourCount[details[i]]++;
                             }
-                    }
-                    foreach (KeyValuePair<string, int> kvp in flavourCount)
-                    {
-                        Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
-                        flavourList.Add(addFlavour);
-                    }
+                        }
+                        foreach (KeyValuePair<string, int> kvp in flavourCount)
+                        {
+                            Flavour addFlavour = new Flavour(kvp.Key, CheckPremiumFlavour(kvp.Key), kvp.Value);
+                            flavourList.Add(addFlavour);
+                        }
 
                         // Adding all the toppings into toppingList
                         List<Topping> toppingList = new List<Topping>();
                         List<string> tops = new List<string>() { "Sprinkles", "Mochi", "Sago", "Oreos" };
-                        for (int i = 11; i < 4+11; i++)
+                        for (int i = 11; i < 4 + 11; i++)
                         {
                             if (tops.Contains(details[i]))
                             {
@@ -163,7 +163,7 @@ namespace Assignment2
                         {
                             if (order.Id == id)
                             {
-                               
+
                                 order.IceCreamList.Add(newIceCream);
                                 isNewOrder = true;
                                 break;
@@ -195,20 +195,8 @@ namespace Assignment2
             }
             OrderCreation();
 
-            /*
-            void displayOrder()
-            {
-                foreach (KeyValuePair<int, Order> kvp in orderDic)
-                {
-                    Console.WriteLine(kvp.Value.ToString());
-                }
-            }
-
-            displayOrder();
-            */
-
-        // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
-        void DisplayMenu()
+            // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
+            void DisplayMenu()
             {
                 Console.WriteLine("---------------- M E N U -----------------");
                 Console.WriteLine("[1] List all customers");
@@ -312,14 +300,14 @@ namespace Assignment2
                 foreach (KeyValuePair<string, Customer> kvp in customerDic)
                 {
                     Customer customer = kvp.Value;
-                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToString("d/M/yyyy"),-10} \t{customer.rewards.Tier, -8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
+                    Console.WriteLine($"{customer.name,-10} \t{kvp.Key,-6} \t\t{customer.dob.ToString("d/M/yyyy"),-10} \t{customer.rewards.Tier,-8} \t{customer.rewards.Points,-6} \t{customer.rewards.PunchCard,-9}");
                 }
                 Console.WriteLine();
             }
 
             void Option2()
             {
-                
+
 
                 if (NormalQueue.Count == 0)
                 {
@@ -334,7 +322,7 @@ namespace Assignment2
                     }
                 }
 
-                
+
 
                 if (GoldQueue.Count == 0)
                 {
@@ -486,7 +474,7 @@ namespace Assignment2
                     }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
                 }
-            
+
                 Customer selectedCustomer = customerDic[memberID];
 
                 if (selectedCustomer.currentOrder.Id != 0)
@@ -558,7 +546,7 @@ namespace Assignment2
                     string customerId;
                     while (true)
                     {
-                       customerId = Console.ReadLine();
+                        customerId = Console.ReadLine();
                         if ((customerId != "") && customerDic.TryGetValue(customerId, out Customer selectedCustomer))
                         {
                             if (selectedCustomer.orderHistory.Count != 0)
@@ -617,7 +605,7 @@ namespace Assignment2
                 }
                 do
                 {
-                   
+
                     Console.Write("Which Customer do you wish to select (ID or 0 to exit): ");
 
                     string customerId;
@@ -804,8 +792,9 @@ namespace Assignment2
                                     }
                                 }
                             }
-                            catch (FormatException e) {
-                                Console.WriteLine("Invalid Input. Please enter number within your point balance.\n"); 
+                            catch (FormatException e)
+                            {
+                                Console.WriteLine("Invalid Input. Please enter number within your point balance.\n");
                             }
                             catch (Exception ex)
                             {
@@ -822,7 +811,7 @@ namespace Assignment2
                     processCustomer.rewards.Punch();
                     processCustomer.rewards.AddPoints((int)Math.Round(totalBill));
                     processCustomer.currentOrder.TimeFulfilled = DateTime.Now;
-                    
+
                     Console.WriteLine("Payment Successful!\n");
                     string monthYearKey = processCustomer.currentOrder.TimeFulfilled.Value.ToString("MMM yyyy");
                     if (monthYearData.ContainsKey(monthYearKey))
@@ -857,9 +846,9 @@ namespace Assignment2
                         Console.Write("Invalid input. Please enter a valid year: ");
                     }
                 }
-                Console.WriteLine("\n\n") ;
+                Console.WriteLine("\n\n");
                 double yearlyTotal = 0.00;
-                
+
 
                 // Iterate over each month of the year
                 for (int month = 1; month <= 12; month++)
@@ -917,14 +906,14 @@ namespace Assignment2
                 Console.WriteLine("Ice Creams Within the Selected Customer's Current Order: ");
                 Console.WriteLine(selectedCustomer.currentOrder);
 
-                int maxIceCreamIndex = selectedCustomer.currentOrder.IceCreamList.Count; 
+                int maxIceCreamIndex = selectedCustomer.currentOrder.IceCreamList.Count;
                 string userInput = GetValidInput("Select an ice cream to delete (0 to exit): ", maxIceCreamIndex);
 
                 if (userInput != "0")
                 {
                     int iceCreamIndex = int.Parse(userInput) - 1;
                     selectedCustomer.currentOrder.DeleteIceCream(iceCreamIndex);
-                                                               
+
                 }
             }
 
@@ -939,8 +928,6 @@ namespace Assignment2
                 Dictionary<string, string> iceCreamType = new Dictionary<string, string>() { { "1", "cup" }, { "2", "cone" }, { "3", "waffle" } };
                 List<Flavour> flavours = new List<Flavour>();
                 List<Topping> toppings = new List<Topping>();
-
-
 
                 string GetValidInput(string prompt, List<string> validResponses)
                 {
@@ -964,7 +951,6 @@ namespace Assignment2
                     while (string.IsNullOrWhiteSpace(response) || !validResponses.Contains(response));
                     return response;
                 }
-
 
                 int GetNumberOfScoops()
                 {
@@ -1030,6 +1016,7 @@ namespace Assignment2
                         Console.WriteLine("\n------------------------------------------");
                         Console.WriteLine("Toppings Available (+$1)");
                         Console.WriteLine("1. Sprinkles\n2. Mochi\n3. Sago\n4. Oreos\n");
+
                         int i = 1;
                         do
                         {
@@ -1040,8 +1027,6 @@ namespace Assignment2
                             if (topping != "exit")
                             {
                                 toppings.Add(new Topping(topping));
-
-
                                 Console.WriteLine($"{topping.ToUpper()} ADDED!");
                                 i++;
                             }
@@ -1050,25 +1035,23 @@ namespace Assignment2
                     }
                 }
 
-                Console.WriteLine("------------------------------------------");
                 Console.WriteLine("Types of Ice Cream:");
                 Console.WriteLine("1. Cup\n2. Cone\n3. Waffle\n");
+
                 string typeInput = GetValidInput("Select Type: ", new List<string> { "1", "2", "3" });
                 string type = iceCreamType[typeInput];
+
                 int scoops = GetNumberOfScoops();
                 AddFlavors(scoops);
                 AddToppings();
 
-
                 if (type == "waffle")
                 {
                     string waffleFlavor = "original";
-
-
                     string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no): ", new List<string> { "yes", "no" });
                     if (waffleResponse == "yes")
                     {
-                        Console.WriteLine("\n------------------------------------------");
+                        Console.WriteLine("\n--------------------------------------------------");
                         Console.WriteLine("Waffle Flavours:");
                         Console.WriteLine("1. Red Velvet\n2. Charcoal\n3. Pandan\n");
                         Dictionary<string, string> waffleDic = new Dictionary<string, string>() { { "1", "Red Velvet" }, { "2", "Charcoal" }, { "3", "Pandan" } };
@@ -1077,7 +1060,6 @@ namespace Assignment2
                     IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                     Console.WriteLine();
-
                 }
                 else if (type == "cone")
                 {
@@ -1086,9 +1068,7 @@ namespace Assignment2
                     if (coneResponse == "yes")
                     {
                         dipped = true;
-
                     }
-
                     IceCream newOne = new Cone(type, scoops, flavours, toppings, dipped);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                     Console.WriteLine();
@@ -1103,7 +1083,8 @@ namespace Assignment2
                 selectedCustomer.currentOrder.Id = orderDic.Count + 1;
                 selectedCustomer.currentOrder.TimeReceived = DateTime.Now;
                 selectedCustomer.currentOrder.TimeFulfilled = null;
-
+                Console.WriteLine("Order successfully added! Thank you for choosing our ice cream.");
+                Console.WriteLine("--------------------------------------------------");
             }
         }
     }

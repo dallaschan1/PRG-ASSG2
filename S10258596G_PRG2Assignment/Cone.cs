@@ -44,7 +44,7 @@ namespace Assignment2
             {
                 if (flavour.Premium)
                 {
-                    totalFlavourPrice += 2.00;
+                    totalFlavourPrice += flavour.Quantity * 2.00;
                 }
             }
             totalPrice += totalFlavourPrice;

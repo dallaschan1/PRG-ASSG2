@@ -210,14 +210,14 @@ namespace Assignment2
             int iceCreamCount = 1;
             foreach (IceCream iceCream in IceCreamList)
             {
-                iceCreamDetails += $"  Ice Cream #{iceCreamCount}:\n    {iceCream.ToString().Replace("\n", "\n    ")}\n";
+                iceCreamDetails += $"\n    Ice Cream #{iceCreamCount}:\n{iceCream}\n";
                 iceCreamCount++;
             }
 
             return $"Order ID: {Id}\n" +
                    $"Time Received: {timeReceivedStr}\n" +
                    $"Time Fulfilled: {timeFulfilledStr}\n" +
-                   $"Ice Creams:\n{iceCreamDetails}";
+                   $"Ice Creams:{iceCreamDetails}";
         }
 
 
