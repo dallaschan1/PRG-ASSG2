@@ -14,10 +14,13 @@ namespace Assignment2
         public List<Flavour> Flavours { get; set; }
         public List<Topping> Toppings { get; set; }
 
+        public List<Review> Reviews { get; set; }
+
         public IceCream() 
         {
-            List<Flavour> Flavours = new List<Flavour>();
-            List<Topping> Toppings = new List<Topping>();
+            Flavours = new List<Flavour>();
+            Toppings = new List<Topping>();
+            Reviews = new List<Review>();
         }
 
         public IceCream(string option, int scoops, List<Flavour> flavours, List<Topping> toppings)
@@ -26,9 +29,22 @@ namespace Assignment2
             Scoops = scoops;
             Flavours = flavours;
             Toppings = toppings;
+            Reviews = new List<Review>();
         }
 
+
         public abstract double CalculatePrice();
+        public override bool Equals(object obj)
+        {
+            if (obj is IceCream other)
+            {
+                return Option == other.Option
+                    && Scoops == other.Scoops
+                    && Flavours.SequenceEqual(other.Flavours)
+                    && Toppings.SequenceEqual(other.Toppings);
+            }
+            return false;
+        }
 
         public override string ToString()
         {

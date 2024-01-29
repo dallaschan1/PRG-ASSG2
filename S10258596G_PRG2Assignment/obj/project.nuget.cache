@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "g9t2dHJMLCDlbEx3zii9ksZEEfEjSIYg9cUp4qqlCj0UfBfkuJdnrN0Bz4yjKsCZRTqxHjDG9vhnjxCHys3RZQ==",
   "success": true,
   "projectFilePath": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+=======
+  "dgSpecHash": "PmVLRoNsFdSas41YxhOoVG4prz0YJzzlT1bSZlU2U4BYI5yiXITCHEAfzT4L2s/eK0e0A8+0DYffIYSc/r9d9Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\dalla\\Downloads\\asaasa\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+>>>>>>> 2edfcbc5416f3f2919b433b9ea13da436d766d8c
   "expectedPackageFiles": [],
   "logs": []
 }
