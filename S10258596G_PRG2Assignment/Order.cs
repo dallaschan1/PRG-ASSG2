@@ -40,8 +40,9 @@ namespace Assignment2
         public void DeleteIceCream(int id)
         {
             
-            if (id >= 0 && id < IceCreamList.Count)
+            if (id >= 0 && id <= IceCreamList.Count)
             {
+                
                 IceCreamList.RemoveAt(id - 1);
             }
             else
@@ -69,6 +70,7 @@ namespace Assignment2
             List<string> toppingsWanted = new List<string>();
             List<Flavour> flavours = new List<Flavour>();
             List<Topping> toppings = new List<Topping>();
+            int ToppingCount = 1;
 
 
 
@@ -82,13 +84,13 @@ namespace Assignment2
 
                     if (string.IsNullOrWhiteSpace(response))
                     {
-                        Console.WriteLine("Input cannot be blank. Please try again.");
+                        Console.WriteLine("Input cannot be blank. Please try again.\n");
                         continue;
                     }
 
                     if (!validResponses.Contains(response))
                     {
-                        Console.WriteLine("Invalid input. Please try again.");
+                        Console.WriteLine("Invalid input. Please try again.\n");
                     }
                 }
                 while (string.IsNullOrWhiteSpace(response) || !validResponses.Contains(response));
@@ -113,7 +115,7 @@ namespace Assignment2
                     string flavorName;
                     do
                     {
-                        Console.Write($"Scoop {i + 1}, what flavor would you like? Regular Flavors: (Vanilla, Chocolate, Strawberry), Premium Flavors: (Durian, Sea salt, Ube): ");
+                        Console.Write($"\nScoop {i + 1}, what flavor would you like? Regular Flavors: (Vanilla, Chocolate, Strawberry), Premium Flavors: (Durian, Sea salt, Ube): ");
                         flavorName = Console.ReadLine().ToLower();
 
                         if (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName))
@@ -140,27 +142,34 @@ namespace Assignment2
 
             void AddToppings()
             {
+                Console.WriteLine();
                 string response = GetValidInput("Do you wish to add toppings? (yes / no): ", new List<string> { "yes", "no" });
                 if (response == "yes")
                 {
                     string topping;
                     do
                     {
-                        topping = GetValidInput("Which topping do you wish to add? (Sprinkles, Mochi, Sago, Oreos, exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
+                        if (ToppingCount == 5)
+                        {
+                            break;
+                        }
+                        topping = GetValidInput($"Topping {ToppingCount}:\nWhich topping do you wish to add? (Sprinkles, Mochi, Sago, Oreos, exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
                         if (topping != "exit")
                         {
                             toppings.Add(new Topping(topping));
                             toppingsWanted.Add(topping);
 
-                            Console.WriteLine("Added!");
+                            Console.WriteLine();
+                            ToppingCount++;
                         }
+
                     }
                     while (topping != "exit");
                 }
             }
 
 
-            string type = GetValidInput("Type of Ice Cream [waffle, cone, cup]: ", new List<string> { "waffle", "cone", "cup" });
+            string type = GetValidInput("\nType of Ice Cream [waffle, cone, cup]: ", new List<string> { "waffle", "cone", "cup" });
             int scoops = GetNumberOfScoops();
             AddFlavors(scoops);
             AddToppings();

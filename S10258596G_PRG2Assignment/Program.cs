@@ -220,16 +220,25 @@ namespace Assignment2
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] details = s.Split(',');
-                        string memberId = details[0];
-                        int orderId = int.Parse(details[1]);
-                        string flavour = details[2].ToLower();
-                        int rating = int.Parse(details[3]);
-                        string comment = details[4];
-                        Review review = new Review(flavour, rating, comment);
+                        string memberId = details[0].PadLeft(6, '0');
 
-                        Customer customer = customerDic[memberId]; 
+                        string flavour = details[1].ToLower();
+                        int rating = int.Parse(details[2]);
+                        string comment = details[3];
+                        string dateString = details[4];
+                        DateTime dateTime;
+                        string[] formats = new string[] { "d/M/yyyy HH:mm", "d-M-yyyy" };
+
+                        DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+
+                        
+
+
+                        Review review = new Review(flavour, rating, comment, dateTime);
+
+                        Customer customer = customerDic[memberId];
                         customer.Reviews.Add(review);
-                        string dicKey = memberId + orderId.ToString();
+                        string dicKey = memberId;
                         if (reviewDic.ContainsKey(dicKey))
                         {
                             reviewDic[dicKey].Add(review);
@@ -278,6 +287,7 @@ namespace Assignment2
                 Console.WriteLine("[7] Process an order and checkout");
                 Console.WriteLine("[8] Display monthly charged amounts breakdown & total charged amounts for the year");
                 Console.WriteLine("[9] Display All Existing Reviews for our IceCreams");
+                Console.WriteLine("[10] Modify Existing Reviews");
                 Console.WriteLine("[0] Exit Program");
                 Console.WriteLine("------------------------------------------");
             }
@@ -291,22 +301,22 @@ namespace Assignment2
                         Console.Write("Enter your option: ");
                         int option = int.Parse(Console.ReadLine());
 
-                        if (option >= 0 && option <= 9) // Included 0 as a valid option
+                        if (option >= 0 && option <= 10) // Included 0 as a valid option
                         {
                             return option;
                         }
                         else
                         {
-                            Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
+                            Console.WriteLine("Invalid input. Please enter a number between 0 and 10.");
                         }
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 10.");
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine("Invalid input. Please enter a number between 0 and 9.");
+                        Console.WriteLine("Invalid input. Please enter a number between 0 and 10.");
                     }
                 } while (true);
             }
@@ -351,6 +361,9 @@ namespace Assignment2
                         break;
                     case 9:
                         Option9();
+                        break;
+                    case 10:
+                        Option10();
                         break;
                 }
                 return false;
@@ -623,14 +636,24 @@ namespace Assignment2
                         customerId = Console.ReadLine();
                         if ((customerId != "") && customerDic.TryGetValue(customerId, out Customer selectedCustomer))
                         {
-                            if (selectedCustomer.orderHistory.Count != 0)
+                            if (selectedCustomer.orderHistory.Count != 0 || (selectedCustomer.currentOrder != null && selectedCustomer.currentOrder.Id != 0))
                             {
-                                Console.WriteLine("\nOrder History: ");
+                                
 
-                                foreach (Order order in selectedCustomer.orderHistory)
+                                if (selectedCustomer.orderHistory.Count == 0)
                                 {
-                                    Console.WriteLine($"{order}");
+                                    Console.WriteLine("No Order History.\n");
                                 }
+                                else
+                                {
+                                    Console.WriteLine("\nOrder History: ");
+                                    foreach (Order order in selectedCustomer.orderHistory)
+                                    {
+                                        Console.WriteLine($"{order}");
+                                    }
+                                }
+
+                                
 
                                 if (selectedCustomer.currentOrder == null || selectedCustomer.currentOrder.Id == 0)
                                 {
@@ -645,7 +668,7 @@ namespace Assignment2
                             }
                             else
                             {
-                                Console.WriteLine("This customer has no order history.");
+                                Console.WriteLine("This customer has no order history and current orders.");
                             }
                             break;
                         }
@@ -680,7 +703,7 @@ namespace Assignment2
                 do
                 {
 
-                    Console.Write("Which Customer do you wish to select (ID or 0 to exit): ");
+                    Console.Write("\nWhich Customer do you wish to select (ID or 0 to exit): ");
 
                     string customerId;
                     while (true)
@@ -696,7 +719,7 @@ namespace Assignment2
                         {
                             return;
                         }
-                        Console.Write("Invalid input. Please enter a valid customer ID (0 to exit):");
+                        Console.Write("\nInvalid input. Please enter a valid customer ID (0 to exit): ");
                     }
 
                     if (selectedCustomer.currentOrder.Id == 0)
@@ -706,38 +729,52 @@ namespace Assignment2
 
                 } while (selectedCustomer.currentOrder.Id == 0);
 
-                Console.WriteLine(selectedCustomer.currentOrder);
+                int iceCreamNumber = 1;
+                Console.WriteLine("\nIce Creams in the Order:\n");
+                foreach (IceCream icecream in selectedCustomer.currentOrder.IceCreamList)
+                {
+                    Console.WriteLine($"Ice Cream {iceCreamNumber}:\n{icecream.ToString()}");
+                    iceCreamNumber++;
+                }
 
                 Console.WriteLine("Choose an action for the ice cream order:");
+                Console.WriteLine("[0] Exit");
                 Console.WriteLine("[1] Modify an existing ice cream");
                 Console.WriteLine("[2] Add a new ice cream");
                 Console.WriteLine("[3] Delete an existing ice cream");
                 Console.Write("Enter your choice: ");
 
                 string input = Console.ReadLine();
-
+                List<string> output = new List<string>() {"1", "2", "3", "0" };
+                while (!output.Contains(input))
+                {
+                    Console.WriteLine("\nInvalid Response.");
+                    Console.Write("Enter your choice: ");
+                    input = Console.ReadLine();
+                }
                 switch (input)
                 {
                     case "1":
-                        int iceCreamNumber = 1;
-                        foreach (IceCream icecream in selectedCustomer.currentOrder.IceCreamList)
-                        {
-                            Console.WriteLine($"Ice Cream {iceCreamNumber}: {icecream.ToString()}");
-                            iceCreamNumber++;
-                        }
-                        Console.Write("Which Ice Cream do you wish to modify: ");
+                        
+                        Console.Write("Which Ice Cream do you wish to modify (0 to exit): ");
 
-                        int selectedIceCreamIndex = 0;
-                        while (true)
+                        int selectedIceCreamIndex = -1;
+                        while (selectedIceCreamIndex != 0)
                         {
                             string inputs = Console.ReadLine();
                             if (int.TryParse(inputs, out selectedIceCreamIndex) &&
-                                selectedIceCreamIndex >= 1 &&
+                                selectedIceCreamIndex >= 0 &&
                                 selectedIceCreamIndex <= selectedCustomer.currentOrder.IceCreamList.Count)
                             {
                                 break;
                             }
-                            Console.WriteLine($"Invalid input. Please enter a number between 1 and {selectedCustomer.currentOrder.IceCreamList.Count}:");
+                            Console.Write($"Invalid input. Please enter a number between 0 and {selectedCustomer.currentOrder.IceCreamList.Count}: ");
+                            selectedIceCreamIndex = -1;
+                        }
+
+                        if (selectedIceCreamIndex == 0)
+                        {
+                            break;
                         }
 
                         selectedIceCreamIndex -= 1;
@@ -753,7 +790,7 @@ namespace Assignment2
 
                     case "3":
                         DeleteIceCream(selectedCustomer);
-                        Console.WriteLine("Successfully Deleted.");
+                        
                         break;
 
                     default:
@@ -897,7 +934,7 @@ namespace Assignment2
                     }
                     processCustomer.orderHistory.Add(processOrder);
                     processCustomer.currentOrder = new Order();
-                    Console.WriteLine("\nPlease provide a review for each ice cream in your order:");
+                    Console.WriteLine("\nPlease provide a review for each unique flavor of ice cream in your order:");
                     foreach (IceCream iceCream in processOrder.IceCreamList)
                     {
                         List<Flavour> flavourHistory = new List<Flavour>();
@@ -911,7 +948,8 @@ namespace Assignment2
                             {
                                 Review review = GetReview(flavour);
                                 processCustomer.Reviews.Add(review);
-                                string dicKey = processCustomer.memberId.ToString() + processOrder.Id.ToString();
+                                string dicKey = processCustomer.memberId.ToString().PadLeft(6, '0');
+
                                 if (reviewDic.ContainsKey(dicKey))
                                 {
                                     reviewDic[dicKey].Add(review);
@@ -922,9 +960,10 @@ namespace Assignment2
                                 }
                                 reviewCat[flavour.Type].Add(review);
 
-                                string memberId = processCustomer.memberId.ToString();
-                                string orderId = processOrder.Id.ToString();
-                                string data = $"{memberId},{orderId},{review.FlavourType},{review.Rating},{(review.Comment.Contains(",") || review.Comment.Contains("\"") ? $"\"{review.Comment.Replace("\"", "\"\"")}\"" : review.Comment)}";
+                                string memberId = processCustomer.memberId.ToString().PadLeft(6, '0');
+
+
+                                string data = $"{memberId},{review.FlavourType},{review.Rating},{(review.Comment.Contains(",") || review.Comment.Contains("\"") ? $"\"{review.Comment.Replace("\"", "\"\"")}\"" : review.Comment)},{review.DateTime.ToString("dd-MM-yyyy HH:mm")}";
                                 using (StreamWriter sw = new StreamWriter("reviews.csv", true))
                                 {
                                     sw.WriteLine(data);
@@ -948,7 +987,13 @@ namespace Assignment2
                 {
                     if (int.TryParse(Console.ReadLine(), out year))
                     {
-                        break;
+                        
+                       if (year >= 1900 && year <= 2100) { break; }
+                        else
+                        {
+                            Console.Write("Invalid input. Please enter a valid year: ");
+                        }
+                        
                     }
                     else
                     {
@@ -957,7 +1002,6 @@ namespace Assignment2
                 }
                 Console.WriteLine("\n\n");
                 double yearlyTotal = 0.00;
-
 
                 // Iterate over each month of the year
                 for (int month = 1; month <= 12; month++)
@@ -981,6 +1025,7 @@ namespace Assignment2
                 // Print the total for the year
                 Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}");
             }
+
 
             Review GetReview(Flavour flavour)
             {
@@ -1010,7 +1055,7 @@ namespace Assignment2
                 }
                 Console.WriteLine();
 
-                return new Review(flavour.Type, rating, comment);
+                return new Review(flavour.Type, rating, comment, DateTime.Now);
             }
 
             void Option9()
@@ -1049,9 +1094,132 @@ namespace Assignment2
                 }
             }
 
+            void Option10()
+            {
+                // Display Customers with Reviews once
+                foreach (var entry in reviewDic)
+                {
+                    Console.WriteLine($"Member ID: {entry.Key.PadLeft(6, '0')}, Number of Reviews: {entry.Value.Count}");
+                }
+
+                Console.WriteLine() ;
+                while (true)
+                {
+                    // User Selects a Customer or Quits
+                    Console.Write("Enter Member ID or 0 to quit: ");
+                    string input = Console.ReadLine();
+                    if (input == "0") return;
+
+                    string selectedMemberId = input.PadLeft(6, '0');
+                    if (reviewDic.ContainsKey(selectedMemberId))
+                    {
+                        var reviews = reviewDic[selectedMemberId];
+
+                        Console.WriteLine($"\nCustomer {selectedMemberId} Reviews:");
+                        Console.WriteLine("-------------------------------------");
+                        for (int i = 0; i < reviews.Count; i++)
+                        {
+                            Console.WriteLine($"Review {i + 1}:");
+                            Console.WriteLine($"- Flavour: {reviews[i].FlavourType}");
+                            Console.WriteLine($"- Rating: {reviews[i].Rating}");
+                            Console.WriteLine($"- Comment: {reviews[i].Comment}");
+                            Console.WriteLine("----------------------");
+                        }
+                        Console.WriteLine("------------------------------------------------------------(End)\n");
+
+                        // User Selects a Review to Modify
+                        int reviewIndex = -1;
+                        while (reviewIndex == -1)
+                        {
+                            Console.Write("Enter Review Number to modify or 0 to quit: ");
+                            input = Console.ReadLine();
+                            if (input == "0") return;
+
+                            if (int.TryParse(input, out int result) && result >= 1 && result <= reviews.Count)
+                            {
+                                reviewIndex = result - 1;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid review number. Please try again.\n");
+                            }
+                        }
+
+                        Review reviewToModify = reviews[reviewIndex];
+
+                        // User Enters New Rating
+                        int newRating = -1;
+                        while (newRating == -1)
+                        {
+                            Console.Write("Enter new rating (1-5): ");
+                            input = Console.ReadLine();
+                            if (int.TryParse(input, out newRating) && newRating >= 1 && newRating <= 5)
+                            {
+                                reviewToModify.Rating = newRating;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid rating. Please enter a number between 1 and 5.\n");
+                                newRating = -1;
+                            }
+                        }
+
+                        // User Enters New Comment
+                        string newComment = null;
+                        while (string.IsNullOrEmpty(newComment))
+                        {
+                            Console.Write("Enter new comment: ");
+                            newComment = Console.ReadLine();
+                            if (string.IsNullOrEmpty(newComment))
+                            {
+                                Console.WriteLine("Comment cannot be empty. Please try again.\n");
+                            }
+                            else
+                            {
+                                reviewToModify.Comment = newComment;
+                            }
+                        }
+
+                        reviewToModify.DateTime = DateTime.Now; // Update the review date to the current time
+
+                        // Update the reviews.csv File
+                        UpdateReviewFile();
+                        Console.WriteLine("Review updated successfully.");
+                        break; // Break out of the loop after successful update
+                    }
+                    else
+                    {
+                        Console.WriteLine("Member ID not found. Please try again.\n");
+                    }
+                }
+            }
+
+
+            void UpdateReviewFile()
+            {
+                using (StreamWriter sw = new StreamWriter("reviews.csv"))
+                {
+                    sw.WriteLine("MemberID,Flavour,Rating,Comment,DateTime"); // Update the header
+                    foreach (var entry in reviewDic)
+                    {
+                        foreach (var review in entry.Value)
+                        {
+                            string data = $"{entry.Key.PadLeft(6, '0')},{review.FlavourType},{review.Rating},{(review.Comment.Contains(",") || review.Comment.Contains("\"") ? $"\"{review.Comment.Replace("\"", "\"\"")}\"" : review.Comment)},{review.DateTime.ToString("dd-MM-yyyy HH:mm")}";
+                            sw.WriteLine(data);
+                        }
+                    }
+                }
+            }
+
+
 
             void DeleteIceCream(Customer selectedCustomer)
             {
+                if (selectedCustomer.currentOrder.IceCreamList.Count == 1)
+                {
+                    Console.WriteLine("There cannot be 0 Ice Creams in the order.\n");
+                    return;
+                }
                 string GetValidInput(string prompt, int maxValidResponse)
                 {
                     string response;
@@ -1063,14 +1231,14 @@ namespace Assignment2
 
                         if (string.IsNullOrWhiteSpace(response))
                         {
-                            Console.WriteLine("Input cannot be blank. Please try again.");
+                            Console.WriteLine("Input cannot be blank. Please try again.\n");
                             continue;
                         }
 
                         bool isNumeric = int.TryParse(response, out responseNumber);
                         if (!isNumeric || responseNumber < 0 || responseNumber > maxValidResponse)
                         {
-                            Console.WriteLine($"Invalid input. Please enter a number between 0 and {maxValidResponse}.");
+                            Console.WriteLine($"Invalid input. Please enter a number between 0 and {maxValidResponse}.\n");
                         }
                     }
                     while (string.IsNullOrWhiteSpace(response) ||
@@ -1079,17 +1247,24 @@ namespace Assignment2
                     return response;
                 }
 
-                Console.WriteLine("Ice Creams Within the Selected Customer's Current Order: ");
-                Console.WriteLine(selectedCustomer.currentOrder);
+                Console.WriteLine("\nIce Creams Within the Selected Customer's Current Order: ");
+                string iceCreamDetails = "";
+                int iceCreamCount = 1;
+                foreach (IceCream iceCream in selectedCustomer.currentOrder.IceCreamList)
+                {
+                    iceCreamDetails += $"\nIce Cream #{iceCreamCount}:\n{iceCream}\n";
+                    iceCreamCount++;
+                }
+                Console.WriteLine(iceCreamDetails);
 
                 int maxIceCreamIndex = selectedCustomer.currentOrder.IceCreamList.Count;
                 string userInput = GetValidInput("Select an ice cream to delete (0 to exit): ", maxIceCreamIndex);
 
                 if (userInput != "0")
                 {
-                    int iceCreamIndex = int.Parse(userInput) - 1;
+                    int iceCreamIndex = int.Parse(userInput);
                     selectedCustomer.currentOrder.DeleteIceCream(iceCreamIndex);
-
+                    Console.WriteLine("Successfully Deleted.");
                 }
             }
 
@@ -1211,7 +1386,7 @@ namespace Assignment2
                     }
                 }
 
-                Console.WriteLine("Types of Ice Cream:");
+                Console.WriteLine("\nTypes of Ice Cream:");
                 Console.WriteLine("1. Cup\n2. Cone\n3. Waffle\n");
 
                 string typeInput = GetValidInput("Select Type: ", new List<string> { "1", "2", "3" });

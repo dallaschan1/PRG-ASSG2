@@ -12,11 +12,13 @@ namespace Assignment2
         public int Rating { get; set; }
         public string Comment { get; set; }
 
-        public Review(string flavourType, int rating, string comment)
+        public DateTime DateTime { get; set; }
+        public Review(string flavourType, int rating, string comment, DateTime datetime)
         {
             FlavourType = flavourType;
             Rating = rating;
             Comment = comment;
+            DateTime = datetime;
         }
 
        
