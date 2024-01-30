@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
+    "C:\\Users\\ianch\\OneDrive\\Desktop\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
   },
   "projects": {
-    "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
+    "C:\\Users\\ianch\\OneDrive\\Desktop\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "projectUniqueName": "C:\\Users\\ianch\\OneDrive\\Desktop\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
         "projectName": "S10258596G_PRG2Assignment",
-        "projectPath": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "projectPath": "C:\\Users\\ianch\\OneDrive\\Desktop\\Assg2 Program\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
         "packagesPath": "C:\\Users\\ianch\\.nuget\\packages\\",
-        "outputPath": "C:\\Sem 2 2023\\PRG2\\Assignment\\Assg2 Program\\S10258596G_PRG2Assignment\\obj\\",
+        "outputPath": "C:\\Users\\ianch\\OneDrive\\Desktop\\Assg2 Program\\S10258596G_PRG2Assignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ianch\\AppData\\Roaming\\NuGet\\NuGet.Config",

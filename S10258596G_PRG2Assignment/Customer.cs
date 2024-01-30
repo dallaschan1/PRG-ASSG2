@@ -22,11 +22,14 @@ namespace Assignment2
 
         public PointCard rewards { get; set; }
 
+        public List<Review> Reviews { get; set; }
+
         public Customer() 
         {
             currentOrder = new Order();
             orderHistory = new List<Order>();
             rewards = new PointCard();
+            Reviews = new List<Review>();
         }
 
         public Customer(string name, int memberId, DateTime dob)
@@ -37,6 +40,7 @@ namespace Assignment2
             currentOrder = new Order();
             orderHistory = new List<Order>();
             rewards = new PointCard();
+            Reviews = new List<Review>();
         }
 
         public Order MakeOrder()

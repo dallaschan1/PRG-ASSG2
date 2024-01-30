@@ -9,7 +9,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
+using Microsoft.VisualBasic.FileIO;
+using static System.Formats.Asn1.AsnWriter;
 
+using System.Text;
+using System.Collections.Specialized;
 
 namespace Assignment2
 {
@@ -22,7 +26,17 @@ namespace Assignment2
             Dictionary<string, Customer> customerDic = new Dictionary<string, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
             Dictionary<string, double> monthYearData = new Dictionary<string, double>();
-            List<IceCream> uniqueIceCreamsList = new List<IceCream>();
+            Dictionary<string, List<Review>> reviewDic = new Dictionary<string, List<Review>>(); /* NOTE: THE KEY FOR THIS DICTIONARY IS THE MemberID+OrderID This is for identifying the reviews by their MemberID & OrderID */ 
+            Dictionary<string, List<Review>> reviewCat = new Dictionary<string, List<Review>> /* This is for displaying the reviews by their flavours */
+            {
+                { "vanilla", new List<Review>() },
+                { "chocolate", new List<Review>() },
+                { "strawberry", new List<Review>() },
+                { "durian", new List<Review>() },
+                { "ube", new List<Review>() },
+                { "sea salt", new List<Review>() }
+            };
+
 
 
 
@@ -48,8 +62,6 @@ namespace Assignment2
                         customerNew.rewards = pointCard;
 
                         customerDic.Add(details[1], customerNew);
-
-
                     }
                 }
             }
@@ -196,6 +208,62 @@ namespace Assignment2
                 }
             }
             OrderCreation();
+
+
+            void FeedbackCreation()
+            {
+                using (StreamReader sr = new StreamReader("reviews.csv"))
+                {
+                    string? s = sr.ReadLine(); // read the heading
+                    string[] heading = s.Split(',');
+
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] details = s.Split(',');
+                        string memberId = details[0];
+                        int orderId = int.Parse(details[1]);
+                        string flavour = details[2].ToLower();
+                        int rating = int.Parse(details[3]);
+                        string comment = details[4];
+                        Review review = new Review(flavour, rating, comment);
+
+                        Customer customer = customerDic[memberId]; 
+                        customer.Reviews.Add(review);
+                        string dicKey = memberId + orderId.ToString();
+                        if (reviewDic.ContainsKey(dicKey))
+                        {
+                            reviewDic[dicKey].Add(review);
+                        }
+                        else
+                        {
+                            reviewDic.Add(dicKey, new List<Review> { review });
+                        }
+                        reviewCat[flavour].Add(review);
+                    }
+                }
+            }
+
+            FeedbackCreation();
+
+/*
+            void FeedBackRead()
+            {
+                foreach (KeyValuePair<string, List<Review>> kvp in reviewDic)
+                {
+                    string memberId = kvp.Key.Substring(0, 6);
+                    string orderId = kvp.Key.Substring(6);
+                    string data;
+                    foreach (Review review in kvp.Value)
+                    {
+                        data = $"{memberId},{orderId},{review.FlavourType},{review.Rating},{review.Comment}";
+                        using (StreamWriter sw = new StreamWriter("reviews.csv", true))
+                        {
+                            sw.WriteLine(data);
+                        }
+                    }
+                }
+            }
+*/
 
             // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
             void DisplayMenu()
@@ -721,6 +789,7 @@ namespace Assignment2
                 double totalBill = 0.00;
                 double mostExPriceOfIceCream = 0.00;
                 IceCream mostExIceCream = null;
+                IceCream punchCardIceCream = null;
                 List<IceCream> iceCreamList = processOrder.IceCreamList;
 
                 foreach (IceCream icecream in processOrder.IceCreamList)
@@ -749,14 +818,12 @@ namespace Assignment2
                     }
                 }
 
-                Console.WriteLine($"Most Expensive IceCream: {mostExIceCream}");
-
                 if (processCustomer != null)
                 {
                     if (processCustomer.IsBirthday())
                     {
+                        Console.WriteLine("Happy Birthday!!!");
                         totalBill -= mostExPriceOfIceCream;
-                        iceCreamList.Remove(mostExIceCream);
                     }
 
                     if (processCustomer.rewards.PunchCard == 10)
@@ -833,24 +900,38 @@ namespace Assignment2
                     Console.WriteLine("\nPlease provide a review for each ice cream in your order:");
                     foreach (IceCream iceCream in processOrder.IceCreamList)
                     {
-                        Console.WriteLine(iceCream.ToString()); 
-                        Review review = GetReview(); 
+                        List<Flavour> flavourHistory = new List<Flavour>();
+                        foreach (Flavour flavour in iceCream.Flavours)
+                        {
+                            if (flavourHistory.Contains(flavour))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                Review review = GetReview(flavour);
+                                processCustomer.Reviews.Add(review);
+                                string dicKey = processCustomer.memberId.ToString() + processOrder.Id.ToString();
+                                if (reviewDic.ContainsKey(dicKey))
+                                {
+                                    reviewDic[dicKey].Add(review);
+                                }
+                                else
+                                {
+                                    reviewDic.Add(dicKey, new List<Review> { review });
+                                }
+                                reviewCat[flavour.Type].Add(review);
 
-                        
-                        IceCream matchingIceCream = uniqueIceCreamsList.FirstOrDefault(ic => ic.Equals(iceCream));
-                        if (matchingIceCream != null)
-                        {
-                            
-                            matchingIceCream.Reviews.Add(review);
-                        }
-                        else
-                        {
-                            
-                            iceCream.Reviews.Add(review);
-                            uniqueIceCreamsList.Add(iceCream);
+                                string memberId = processCustomer.memberId.ToString();
+                                string orderId = processOrder.Id.ToString();
+                                string data = $"{memberId},{orderId},{review.FlavourType},{review.Rating},{(review.Comment.Contains(",") || review.Comment.Contains("\"") ? $"\"{review.Comment.Replace("\"", "\"\"")}\"" : review.Comment)}";
+                                using (StreamWriter sw = new StreamWriter("reviews.csv", true))
+                                {
+                                    sw.WriteLine(data);
+                                }
+                            }
                         }
                     }
-
                 }
                 else
                 {
@@ -901,52 +982,66 @@ namespace Assignment2
                 Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}");
             }
 
-            Review GetReview()
+            Review GetReview(Flavour flavour)
             {
                 int rating;
+                string comment;
                 while (true)
                 {
-                    Console.Write("Please enter a rating (1-5): ");
+                    Console.Write($"{char.ToUpper(flavour.Type[0]) + flavour.Type.Substring(1)} Flavour rating (1-5): ");
                     if (int.TryParse(Console.ReadLine(), out rating) && rating >= 1 && rating <= 5)
                     {
                         break;
                     }
                     Console.WriteLine("Invalid rating. Please enter a number between 1 and 5.");
                 }
+                while (true)
+                {
+                    Console.Write("Please enter a comment: ");
+                    comment = Console.ReadLine();
+                    if (comment == "")
+                    {
+                        Console.WriteLine("Blank Input. Please enter a comment");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                Console.WriteLine();
 
-                Console.Write("Please enter a comment: ");
-                string comment = Console.ReadLine();
-
-                return new Review(rating, comment);
+                return new Review(flavour.Type, rating, comment);
             }
 
             void Option9()
             {
-                
-
-                if (uniqueIceCreamsList.Count > 0)
+                if (reviewDic.Count > 0)
                 {
-                    Console.WriteLine("Ice Cream Reviews\n");
+                    Console.WriteLine();
                     Console.WriteLine("---------------------------------------------------");
-                    foreach (IceCream iceCream in uniqueIceCreamsList)
+                    foreach (KeyValuePair<string, List<Review>> kvp in reviewCat)
                     {
-                        Console.WriteLine(iceCream.ToString()); // Display ice cream details
-
-                        if (iceCream.Reviews.Count > 0)
+                        if (kvp.Value.Count > 0)
                         {
-                            double avgRating = iceCream.Reviews.Average(review => review.Rating);
-                            Console.WriteLine($"Average Rating: {avgRating:0.0} / 5");
-
-                            Console.WriteLine("Comments:");
-                            foreach (Review review in iceCream.Reviews)
+                            double totalRating = 0;
+                            double avgRating;
+                            int count = 0;
+                            Console.WriteLine($"{char.ToUpper(kvp.Key[0]) + kvp.Key.Substring(1)} Reviews: ");
+                            foreach (Review review in kvp.Value)
                             {
-                                Console.WriteLine($"- {review.Comment}");
+                                count += 1;
+                                totalRating += review.Rating;
+                                Console.WriteLine($"Review {count}:");
+                                Console.WriteLine($"{review}");
+                                Console.WriteLine();
                             }
+                            avgRating = Math.Round(totalRating / count, 2);
+                            Console.WriteLine($"{char.ToUpper(kvp.Key[0]) + kvp.Key.Substring(1)} Avg Rating: {avgRating:0.00}");
+                            Console.WriteLine();
+                            Console.WriteLine("---------------------------------------------------");
                         }
-
-
-                        Console.WriteLine("---------------------------------------------------");
                     }
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -1048,7 +1143,7 @@ namespace Assignment2
                     string chosenFlavour;
                     Console.WriteLine("\n------------------------------------------");
                     Console.WriteLine("Regular Flavours: \n1. Vanilla\n2. Chocolate\n3. Strawberry\n");
-                    Console.WriteLine("Premium Flavors: \n4. Durian\n5. Sea Salt\n6. Ube\n");
+                    Console.WriteLine("Premium Flavors: \n4. Durian\n5. Ube\n6. Sea Salt\n");
                     for (int i = 0; i < numberOfScoops; i++)
                     {
                         do
