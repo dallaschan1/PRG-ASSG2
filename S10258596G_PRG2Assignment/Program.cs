@@ -227,7 +227,7 @@ namespace Assignment2
                         string comment = details[3];
                         string dateString = details[4];
                         DateTime dateTime;
-                        string[] formats = new string[] { "d/M/yyyy HH:mm", "d-M-yyyy" };
+                        string[] formats = new string[] { "d/M/yyyy HH:mm", "d-M-yyyy HH:mm" };
 
                         DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
 
@@ -1076,7 +1076,7 @@ namespace Assignment2
                             {
                                 count += 1;
                                 totalRating += review.Rating;
-                                Console.WriteLine($"Review {count}:");
+                                Console.WriteLine($"Review {count} ({review.DateTime}):");
                                 Console.WriteLine($"{review}");
                                 Console.WriteLine();
                             }
