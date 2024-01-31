@@ -242,14 +242,16 @@ namespace Assignment2
             int iceCreamCount = 1;
             foreach (IceCream iceCream in IceCreamList)
             {
-                iceCreamDetails += $"\nIce Cream #{iceCreamCount}:\n{iceCream}\n";
+                iceCreamDetails += $"\nIce Cream #{iceCreamCount}:\n{iceCream}";
                 iceCreamCount++;
             }
 
-            return $"Order ID: {Id}\n" +
+            return $"==================================================\n" +
+                   $"Order ID: {Id}\n" +
                    $"Time Received: {timeReceivedStr}\n" +
                    $"Time Fulfilled: {timeFulfilledStr}\n" +
-                   $"Ice Creams:\n{iceCreamDetails}";
+                   $"{iceCreamDetails}\n" +
+                   $"==================================================";
         }
 
 

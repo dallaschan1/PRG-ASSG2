@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dalla\\Downloads\\dad\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
+    "C:\\Users\\ianch\\OneDrive\\Desktop\\PRG2 Assg2\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dalla\\Downloads\\dad\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
+    "C:\\Users\\ianch\\OneDrive\\Desktop\\PRG2 Assg2\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dalla\\Downloads\\dad\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "projectUniqueName": "C:\\Users\\ianch\\OneDrive\\Desktop\\PRG2 Assg2\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
         "projectName": "S10258596G_PRG2Assignment",
-        "projectPath": "C:\\Users\\dalla\\Downloads\\dad\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
-        "packagesPath": "C:\\Users\\dalla\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dalla\\Downloads\\dad\\S10258596G_PRG2Assignment\\obj\\",
+        "projectPath": "C:\\Users\\ianch\\OneDrive\\Desktop\\PRG2 Assg2\\S10258596G_PRG2Assignment\\S10258596G_PRG2Assignment.csproj",
+        "packagesPath": "C:\\Users\\ianch\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ianch\\OneDrive\\Desktop\\PRG2 Assg2\\S10258596G_PRG2Assignment\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\dalla\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ianch\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

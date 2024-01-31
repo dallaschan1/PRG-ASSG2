@@ -628,6 +628,7 @@ namespace Assignment2
                         Console.WriteLine(entry.Value);
 
                     }
+                    Console.WriteLine() ;
                     Console.Write("Which Customer do you wish to select (ID): ");
 
                     string customerId;
@@ -647,10 +648,12 @@ namespace Assignment2
                                 else
                                 {
                                     Console.WriteLine("\nOrder History: ");
+                                    Console.WriteLine("------------------------------------------");
                                     foreach (Order order in selectedCustomer.orderHistory)
                                     {
-                                        Console.WriteLine($"{order}");
+                                        Console.WriteLine($"{order}\n");
                                     }
+                                    Console.WriteLine("------------------------------------------\n");
                                 }
 
                                 
@@ -662,13 +665,15 @@ namespace Assignment2
                                 else
                                 {
                                     Console.WriteLine("Current Order: ");
+                                    Console.WriteLine("------------------------------------------");
                                     Console.WriteLine($"{selectedCustomer.currentOrder}");
+                                    Console.WriteLine("------------------------------------------\n");
                                 }
 
                             }
                             else
                             {
-                                Console.WriteLine("This customer has no order history and current orders.");
+                                Console.WriteLine("This customer has no order history and current orders.\n");
                             }
                             break;
                         }
@@ -677,7 +682,7 @@ namespace Assignment2
                 }
                 else
                 {
-                    Console.WriteLine("No customers available.");
+                    Console.WriteLine("No customers available.\n");
                 }
 
             }
@@ -717,6 +722,7 @@ namespace Assignment2
                         }
                         else if (customerId == "0")
                         {
+                            Console.WriteLine();
                             return;
                         }
                         Console.Write("\nInvalid input. Please enter a valid customer ID (0 to exit): ");
@@ -1002,9 +1008,8 @@ namespace Assignment2
                         Console.Write("Invalid input. Please enter a valid year: ");
                     }
                 }
-                Console.WriteLine("\n\n");
                 double yearlyTotal = 0.00;
-
+                Console.WriteLine();
                 // Iterate over each month of the year
                 for (int month = 1; month <= 12; month++)
                 {
@@ -1025,7 +1030,7 @@ namespace Assignment2
                 }
 
                 // Print the total for the year
-                Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}");
+                Console.WriteLine($"\nTotal for {year}: ${yearlyTotal:0.00}\n");
             }
 
 
@@ -1186,7 +1191,7 @@ namespace Assignment2
 
                         // Update the reviews.csv File
                         UpdateReviewFile();
-                        Console.WriteLine("Review updated successfully.");
+                        Console.WriteLine("Review updated successfully.\n");
                         break; // Break out of the loop after successful update
                     }
                     else
@@ -1276,9 +1281,9 @@ namespace Assignment2
 
             void AddIceCream(Customer selectedCustomer)
             {
-                Dictionary<string, string> normalFlavor = new Dictionary<string, string>() { { "1", "vanilla" }, { "2", "chocolate" }, { "3", "strawberry" } };
-                Dictionary<string, string> specialFlavor = new Dictionary<string, string>() { { "4", "durian" }, { "5", "ube" }, { "6", "sea salt" } };
-                Dictionary<string, string> iceCreamType = new Dictionary<string, string>() { { "1", "cup" }, { "2", "cone" }, { "3", "waffle" } };
+                Dictionary<string, string> normalFlavor = new Dictionary<string, string>() { { "1", "Vanilla" }, { "2", "Chocolate" }, { "3", "Strawberry" } };
+                Dictionary<string, string> specialFlavor = new Dictionary<string, string>() { { "4", "Durian" }, { "5", "Ube" }, { "6", "Sea Salt" } };
+                Dictionary<string, string> iceCreamType = new Dictionary<string, string>() { { "1", "Cup" }, { "2", "Cone" }, { "3", "Waffle" } };
                 List<Flavour> flavours = new List<Flavour>();
                 List<Topping> toppings = new List<Topping>();
 
@@ -1373,14 +1378,14 @@ namespace Assignment2
                         int i = 1;
                         do
                         {
-                            Dictionary<string, string> toppingDic = new Dictionary<string, string> { { "1", "sprinkles" }, { "2", "mochi" }, { "3", "sago" }, { "4", "oreos" }, { "0", "exit" } };
+                            Dictionary<string, string> toppingDic = new Dictionary<string, string> { { "1", "Sprinkles" }, { "2", "Mochi" }, { "3", "Sago" }, { "4", "Oreos" }, { "0", "exit" } };
                             string input = GetValidInput($"Topping {i}/4 (0 to finish): ", new List<string> { "1", "2", "3", "4", "0" });
                             topping = toppingDic[input];
 
                             if (topping != "exit")
                             {
                                 toppings.Add(new Topping(topping));
-                                Console.WriteLine($"{topping.ToUpper()} ADDED!");
+                                Console.WriteLine($"{topping} ADDED!");
                                 i++;
                             }
                         }
@@ -1398,9 +1403,9 @@ namespace Assignment2
                 AddFlavors(scoops);
                 AddToppings();
 
-                if (type == "waffle")
+                if (type == "Waffle")
                 {
-                    string waffleFlavor = "original";
+                    string waffleFlavor = "Original";
                     string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no): ", new List<string> { "yes", "no" });
                     if (waffleResponse == "yes")
                     {
@@ -1414,7 +1419,7 @@ namespace Assignment2
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                     Console.WriteLine();
                 }
-                else if (type == "cone")
+                else if (type == "Cone")
                 {
                     bool dipped = false;
                     string coneResponse = GetValidInput("Do you wish to dip your cone in chocolate? (yes / no): ", new List<string> { "yes", "no" });
@@ -1426,7 +1431,7 @@ namespace Assignment2
                     selectedCustomer.currentOrder.AddIceCream(newOne);
                     Console.WriteLine();
                 }
-                else if (type == "cup")
+                else if (type == "Cup")
                 {
                     IceCream newOne = new Cup(type, scoops, flavours, toppings);
                     selectedCustomer.currentOrder.AddIceCream(newOne);
