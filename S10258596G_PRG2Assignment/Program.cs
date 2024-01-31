@@ -785,13 +785,13 @@ namespace Assignment2
 
                         selectedIceCreamIndex -= 1;
                         selectedCustomer.currentOrder.ModifyIceCream(selectedIceCreamIndex);
-                        Console.WriteLine("Successfully Modified!");
+                        Console.WriteLine("Successfully Modified!\n");
                         break;
 
                     case "2":
                         AddIceCream(selectedCustomer);
                         selectedCustomer.currentOrder.Id -= 1;
-                        Console.WriteLine("Successfully Added!");
+                        Console.WriteLine("Successfully Added!\n");
                         break;
 
                     case "3":
@@ -1271,7 +1271,7 @@ namespace Assignment2
                 {
                     int iceCreamIndex = int.Parse(userInput);
                     selectedCustomer.currentOrder.DeleteIceCream(iceCreamIndex);
-                    Console.WriteLine("Successfully Deleted.");
+                    Console.WriteLine("Successfully Deleted.\n");
                 }
             }
 
