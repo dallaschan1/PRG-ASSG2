@@ -14,6 +14,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 using System.Text;
 using System.Collections.Specialized;
+using System.Security.Cryptography;
 
 namespace Assignment2
 {
@@ -26,15 +27,15 @@ namespace Assignment2
             Dictionary<string, Customer> customerDic = new Dictionary<string, Customer>();
             Dictionary<int, Order> orderDic = new Dictionary<int, Order>();
             Dictionary<string, double> monthYearData = new Dictionary<string, double>();
-            Dictionary<string, List<Review>> reviewDic = new Dictionary<string, List<Review>>(); /* NOTE: THE KEY FOR THIS DICTIONARY IS THE MemberID+OrderID This is for identifying the reviews by their MemberID & OrderID */ 
-            Dictionary<string, List<Review>> reviewCat = new Dictionary<string, List<Review>> /* This is for displaying the reviews by their flavours */
+            Dictionary<string, List<Review>> reviewDic = new Dictionary<string, List<Review>>(); /* (NOTE: THE KEY FOR THIS DICTIONARY IS THE MemberID) This is for identifying the reviews by their MemberID & OrderID */ 
+            Dictionary<string, List<Review>> reviewCat = new Dictionary<string, List<Review>> /* (NOTE: The key for this dictionary is the flavour) This is for displaying the reviews by their flavours */
             {
-                { "vanilla", new List<Review>() },
-                { "chocolate", new List<Review>() },
-                { "strawberry", new List<Review>() },
-                { "durian", new List<Review>() },
-                { "ube", new List<Review>() },
-                { "sea salt", new List<Review>() }
+                { "Vanilla", new List<Review>() },
+                { "Chocolate", new List<Review>() },
+                { "Strawberry", new List<Review>() },
+                { "Durian", new List<Review>() },
+                { "Ube", new List<Review>() },
+                { "Sea Salt", new List<Review>() }
             };
 
 
@@ -167,7 +168,7 @@ namespace Assignment2
 
 
 
-                        // Finish creating order for customer
+                        // Creating order for customer
                         int memberID = Int32.Parse(details[1]);
                         Customer customer = customerDic[details[1]];
                         List<Order> orderHistory = customer.orderHistory;
@@ -222,7 +223,7 @@ namespace Assignment2
                         string[] details = s.Split(',');
                         string memberId = details[0].PadLeft(6, '0');
 
-                        string flavour = details[1].ToLower();
+                        string flavour = details[1];
                         int rating = int.Parse(details[2]);
                         string comment = details[3];
                         string dateString = details[4];
@@ -434,6 +435,7 @@ namespace Assignment2
                 string id = "";
                 DateTime dob;
 
+                // Error Handling for customer name
                 while (true)
                 {
                     try
@@ -454,6 +456,7 @@ namespace Assignment2
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
                 }
 
+                // Error handling for customer ID
                 while (true)
                 {
                     try
@@ -487,6 +490,7 @@ namespace Assignment2
                     catch (Exception ex) { Console.WriteLine(ex.Message); }
                 }
 
+                // Error handling for customer date of birth
                 while (true)
                 {
                     try
@@ -507,6 +511,7 @@ namespace Assignment2
                     }
                 }
 
+                // Creating new customer and appending it to the customers.csv file
                 Customer newCustomer = new Customer(name, Int32.Parse(id), dob);
                 customerDic.Add(id, newCustomer);
 
@@ -516,7 +521,7 @@ namespace Assignment2
                 {
                     sw.WriteLine(data);
                 }
-                Console.WriteLine("Registration Status: Successful!\n"); // Might need to shift it in the error handling part instead
+                Console.WriteLine("Registration Status: Successful!\n"); 
             }
 
             void Option4()
@@ -602,6 +607,7 @@ namespace Assignment2
                     }
                 }
 
+                // Adding newly created order to the orderDic & queueing them in a queue
                 orderDic.Add(selectedCustomer.currentOrder.Id, selectedCustomer.currentOrder);
 
                 if (selectedCustomer.rewards.Tier == "Gold")
@@ -927,8 +933,11 @@ namespace Assignment2
                     processCustomer.rewards.Punch();
                     processCustomer.rewards.AddPoints((int)Math.Round(totalBill));
                     processCustomer.currentOrder.TimeFulfilled = DateTime.Now;
+                    AppendOrder(processCustomer, processOrder);
+
 
                     Console.WriteLine("Payment Successful!\n");
+
                     string monthYearKey = processCustomer.currentOrder.TimeFulfilled.Value.ToString("MMM yyyy");
                     if (monthYearData.ContainsKey(monthYearKey))
                     {
@@ -985,6 +994,72 @@ namespace Assignment2
                     Console.WriteLine("ERROR: No matching order found."); // Handle the case when no match is found
                 }
 
+            }
+
+            void AppendOrder(Customer processCustomer, Order processOrder)
+            {
+                foreach (IceCream icecream in processOrder.IceCreamList)
+                {
+                    string memberId = processCustomer.memberId.ToString().PadLeft(6, '0');
+                    string orderId = processOrder.Id.ToString();
+                    string timeReceived = processOrder.TimeReceived.ToString("M/d/yyyy HH:mm");
+                    string timeFulfilled = processOrder.TimeFulfilled?.ToString("M/d/yyyy HH:mm") ?? "ERROR PLEASE CHECK PROGRAM";
+                    string option = icecream.Option;
+                    string scoops = icecream.Scoops.ToString();
+                    string dipped = "";
+                    string waffleFlavour = "";
+                    string flavours = "";
+                    int flavoursCount = icecream.Flavours.Count();
+                    int emptyFlavourCount = 3 - flavoursCount;
+                    for (int i = 0; i < flavoursCount; i++)
+                    {
+                        flavours += $"{icecream.Flavours[i].Type},";
+                    }
+                    for (int i = 0; i < emptyFlavourCount; i++)
+                    {
+                        flavours += $",";
+                    }
+                    // NOTE: flavours would automatically have a comma at the last character so there is no need to add a comma after calling it in the datacreation
+
+                    string toppings = "";
+                    int toppingsCount = icecream.Toppings.Count();
+                    int emptyToppingCount = 4 - toppingsCount;
+                    for (int i = 0; i < toppingsCount; i++)
+                    {
+                        toppings += $"{icecream.Toppings[i].Type},";
+                    }
+                    for (int i = 0; i < emptyToppingCount; i++)
+                    {
+                        toppings += $",";
+                    }
+                    toppings.Substring(0, toppings.Length - 1);
+
+                    string data = "";
+                    if (icecream.Option == "Waffle")
+                    {
+                        Waffle waffle = (Waffle)icecream;
+                        waffleFlavour = waffle.WaffleFlavour;
+                        data = $"{orderId},{memberId},{timeReceived},{timeFulfilled},{option},{scoops},{dipped},{waffleFlavour},{flavours}{toppings}";
+                    }
+                    else if (icecream.Option == "Cone")
+                    {
+                        Cone cone = (Cone)icecream;
+                        dipped = cone.Dipped.ToString().ToUpper();
+                        data = $"{orderId},{memberId},{timeReceived},{timeFulfilled},{option},{scoops},{dipped},{waffleFlavour},{flavours}{toppings}";
+                    }
+                    else if(icecream.Option == "Cup")
+                    {
+                        data = $"{orderId},{memberId},{timeReceived},{timeFulfilled},{option},{scoops},{dipped},{waffleFlavour},{flavours}{toppings}";
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR PLEASE CHECK PROGRAM!!!");
+                    }
+                    using (StreamWriter sw = new StreamWriter("orders.csv", true))
+                    {
+                        sw.WriteLine(data);
+                    }
+                }
             }
 
             void Option8()

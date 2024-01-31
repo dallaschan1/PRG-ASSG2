@@ -6,3 +6,6 @@ Id,MemberId,TimeReceived,TimeFulfilled,Option,Scoops,Dipped,WaffleFlavour,Flavou
 3,820215,3/1/2024 15:50,3/1/2024 16:03,Waffle,3,,Original,Sea Salt,Durian,Durian,,,,
 4,685582,9/1/2024 17:02,9/1/2024 17:07,Cup,3,,,Vanilla,Chocolate,Strawberry,Sprinkles,Oreos,,
 4,685582,9/1/2024 17:02,9/1/2024 17:07,Cup,1,,,Sea Salt,,,Sprinkles,,,
+5,123456,1/31/2024 13:53,1/31/2024 13:53,Cup,2,,,Ube,Durian,,,,,,
+5,123456,1/31/2024 13:53,1/31/2024 13:53,Cone,3,TRUE,,Vanilla,Durian,Sea Salt,Sprinkles,Mochi,,,
+5,123456,1/31/2024 13:53,1/31/2024 13:53,Waffle,3,,Red Velvet,Chocolate,Sea Salt,Durian,Sprinkles,Mochi,Sago,Oreos,
