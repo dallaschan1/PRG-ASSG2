@@ -939,6 +939,7 @@ namespace Assignment2
                     processCustomer.currentOrder = new Order();
                     Console.WriteLine("\nPlease provide a review for each unique flavor of ice cream in your order:");
                     List<Flavour> flavourHistory = new List<Flavour>();
+                    
                     // Getting review from customers
                     foreach (IceCream iceCream in processOrder.IceCreamList)
                     {
