@@ -255,26 +255,6 @@ namespace Assignment2
 
             FeedbackCreation();
 
-/*
-            void FeedBackRead()
-            {
-                foreach (KeyValuePair<string, List<Review>> kvp in reviewDic)
-                {
-                    string memberId = kvp.Key.Substring(0, 6);
-                    string orderId = kvp.Key.Substring(6);
-                    string data;
-                    foreach (Review review in kvp.Value)
-                    {
-                        data = $"{memberId},{orderId},{review.FlavourType},{review.Rating},{review.Comment}";
-                        using (StreamWriter sw = new StreamWriter("reviews.csv", true))
-                        {
-                            sw.WriteLine(data);
-                        }
-                    }
-                }
-            }
-*/
-
             // Displays a menu for user to choose to perform each of the feature describe below repeatedly until user chooses to exit from the menu
             void DisplayMenu()
             {
@@ -332,17 +312,14 @@ namespace Assignment2
                         return true;
 
                     case 1:
-                        // 1) List all customers - display the information of all the customers
                         Option1();
                         break;
 
                     case 2:
-                        // 2) List all current orders - display the information of all current orders in both the gold members and regular queue
                         Option2();
                         break;
 
                     case 3:
-                        // 3) Register a new customer
                         Option3();
                         break;
                     case 4:
@@ -575,6 +552,7 @@ namespace Assignment2
                     return;
                 }
 
+                // Creating Order for customer
                 Order newOrder = new Order();
 
                 int orderID = orderDic.Count + 1;
@@ -584,8 +562,11 @@ namespace Assignment2
                 int i = 1;
                 Console.WriteLine();
                 Console.WriteLine($"IceCream #{i}");
+
+                // Asking them to addIceCream the first time
                 AddIceCream(selectedCustomer);
 
+                // The code below is to ask them whether they would like to add anymore icecreams
                 while (true)
                 {
                     Console.Write("Would you like to add another ice cream to the order? (yes / no): ");
@@ -815,6 +796,7 @@ namespace Assignment2
             {
                 Order processOrder;
 
+                // Check if gold queue has any queues followed by normal queue
                 if (GoldQueue.Count() != 0)
                 {
                     processOrder = GoldQueue.Peek();
@@ -841,6 +823,7 @@ namespace Assignment2
                 IceCream punchCardIceCream = null;
                 List<IceCream> iceCreamList = processOrder.IceCreamList;
 
+                // Finding most expensive icecream in the order
                 foreach (IceCream icecream in processOrder.IceCreamList)
                 {
                     double priceOfIceCream = icecream.CalculatePrice();
@@ -869,23 +852,28 @@ namespace Assignment2
 
                 if (processCustomer != null)
                 {
+                    // Birthday Condition
                     if (processCustomer.IsBirthday())
                     {
                         Console.WriteLine("Happy Birthday!!!");
                         totalBill -= mostExPriceOfIceCream;
                     }
 
+                    // Every 10 punchcard condition
                     if (processCustomer.rewards.PunchCard == 10)
                     {
                         totalBill -= processOrder.IceCreamList[0].CalculatePrice();
                         processCustomer.rewards.PunchCard = 0;
                     }
 
+                    // Checking if they are eligible to redeem their points
                     if (processCustomer.rewards.Points != 0 && processCustomer.rewards.Tier != "Ordinary")
                     {
                         Console.WriteLine("------------------------------------------");
                         Console.WriteLine($"Membership Tier: {processCustomer.rewards.Tier}");
                         Console.WriteLine($"Point Balance: {processCustomer.rewards.Points}");
+
+                        // Error handling for how many points they want to redeem and redeeming this points once selected
                         while (true)
                         {
                             try
@@ -933,7 +921,7 @@ namespace Assignment2
                     processCustomer.rewards.Punch();
                     processCustomer.rewards.AddPoints((int)Math.Round(totalBill));
                     processCustomer.currentOrder.TimeFulfilled = DateTime.Now;
-                    AppendOrder(processCustomer, processOrder);
+                    AppendOrder(processCustomer, processOrder); // Appending order to the csv data file
 
 
                     Console.WriteLine("Payment Successful!\n");
@@ -951,9 +939,9 @@ namespace Assignment2
                     processCustomer.currentOrder = new Order();
                     Console.WriteLine("\nPlease provide a review for each unique flavor of ice cream in your order:");
                     List<Flavour> flavourHistory = new List<Flavour>();
+                    // Getting review from customers
                     foreach (IceCream iceCream in processOrder.IceCreamList)
                     {
-                        
                         foreach (Flavour flavour in iceCream.Flavours)
                         {
                             if (flavourHistory.Contains(flavour))
@@ -993,9 +981,9 @@ namespace Assignment2
                 {
                     Console.WriteLine("ERROR: No matching order found."); // Handle the case when no match is found
                 }
-
             }
 
+            // Appending order to the csv data file function
             void AppendOrder(Customer processCustomer, Order processOrder)
             {
                 foreach (IceCream icecream in processOrder.IceCreamList)
