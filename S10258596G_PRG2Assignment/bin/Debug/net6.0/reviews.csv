@@ -12,3 +12,10 @@ MemberID,Flavour,Rating,Comment,DateTime
 111111,chocolate,3,Meh,01-01-0001 00:00
 111111,strawberry,4,Fresh & Sweet. Love it!,01-01-0001 00:00
 001234,vanilla,3,ok,01-01-0001 00:00
+123456,vanilla,2,eh,31-01-2024 09:48
+001234,chocolate,4,its ok,31-01-2024 09:49
+001234,vanilla,2,its ok,31-01-2024 09:49
+001234,strawberry,1,its ok,31-01-2024 09:49
+001234,chocolate,4,its ok,31-01-2024 09:49
+001234,strawberry,5,its ok,31-01-2024 09:49
+001234,vanilla,5,its ok,31-01-2024 09:49

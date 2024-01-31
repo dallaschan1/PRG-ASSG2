@@ -64,15 +64,10 @@ namespace Assignment2
 
         public void ModifyIceCream(int iceCream)
         {
-            List<string> normalFlavor = new List<string>() { "vanilla", "chocolate", "strawberry" };
-            List<string> specialFlavor = new List<string>() { "durian", "ube", "sea salt" };
-            List<string> flavorsWanted = new List<string>();
-            List<string> toppingsWanted = new List<string>();
+            Dictionary<string, string> normalFlavor = new Dictionary<string, string>() { { "1", "vanilla" }, { "2", "chocolate" }, { "3", "strawberry" } };
+            Dictionary<string, string> specialFlavor = new Dictionary<string, string>() { { "4", "durian" }, { "5", "ube" }, { "6", "sea salt" } };
             List<Flavour> flavours = new List<Flavour>();
             List<Topping> toppings = new List<Topping>();
-            int ToppingCount = 1;
-
-
 
             string GetValidInput(string prompt, List<string> validResponses)
             {
@@ -84,49 +79,60 @@ namespace Assignment2
 
                     if (string.IsNullOrWhiteSpace(response))
                     {
-                        Console.WriteLine("Input cannot be blank. Please try again.\n");
+                        Console.WriteLine("Input cannot be blank. Please try again.");
                         continue;
                     }
 
                     if (!validResponses.Contains(response))
                     {
-                        Console.WriteLine("Invalid input. Please try again.\n");
+                        Console.WriteLine("Invalid input. Please try again.");
                     }
                 }
                 while (string.IsNullOrWhiteSpace(response) || !validResponses.Contains(response));
                 return response;
             }
 
-
             int GetNumberOfScoops()
             {
-                return GetValidInput("How many scoops do you want? (Single, Double or Triple): ", new List<string> { "single", "double", "triple" }) switch
+                return GetValidInput("How many scoops do you want (1-3)?: ", new List<string> { "1", "2", "3" }) switch
                 {
-                    "single" => 1,
-                    "double" => 2,
-                    "triple" => 3
+                    "1" => 1,
+                    "2" => 2,
+                    "3" => 3
                 };
             }
 
             void AddFlavors(int numberOfScoops)
             {
+                string chosenFlavour;
+                Console.WriteLine("\n------------------------------------------");
+                Console.WriteLine("Regular Flavours: \n1. Vanilla\n2. Chocolate\n3. Strawberry\n");
+                Console.WriteLine("Premium Flavors: \n4. Durian\n5. Ube\n6. Sea Salt\n");
                 for (int i = 0; i < numberOfScoops; i++)
                 {
-                    string flavorName;
                     do
                     {
-                        Console.Write($"\nScoop {i + 1}, what flavor would you like? Regular Flavors: (Vanilla, Chocolate, Strawberry), Premium Flavors: (Durian, Sea salt, Ube): ");
-                        flavorName = Console.ReadLine().ToLower();
+                        Console.Write($"Scoop {i + 1} flavour: ");
+                        chosenFlavour = Console.ReadLine();
 
-                        if (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName))
+                        if (!normalFlavor.ContainsKey(chosenFlavour) && !specialFlavor.ContainsKey(chosenFlavour))
                         {
                             Console.WriteLine("Error: Invalid flavor. Please choose a valid flavor.");
                         }
                     }
-                    while (!normalFlavor.Contains(flavorName) && !specialFlavor.Contains(flavorName));
+                    while (!normalFlavor.ContainsKey(chosenFlavour) && !specialFlavor.ContainsKey(chosenFlavour));
 
-                    bool isPremium = specialFlavor.Contains(flavorName);
+                    bool isPremium = specialFlavor.ContainsKey(chosenFlavour);
+                    string flavorName = "";
 
+                    if (normalFlavor.ContainsKey(chosenFlavour))
+                    {
+                        flavorName = normalFlavor[chosenFlavour];
+                    }
+                    else
+                    {
+                        flavorName = specialFlavor[chosenFlavour];
+                    }
 
                     Flavour existingFlavour = flavours.FirstOrDefault(f => f.Type == flavorName);
                     if (existingFlavour != null)
@@ -142,73 +148,90 @@ namespace Assignment2
 
             void AddToppings()
             {
-                Console.WriteLine();
                 string response = GetValidInput("Do you wish to add toppings? (yes / no): ", new List<string> { "yes", "no" });
                 if (response == "yes")
                 {
                     string topping;
+                    Console.WriteLine("\n------------------------------------------");
+                    Console.WriteLine("Toppings Available (+$1)");
+                    Console.WriteLine("1. Sprinkles\n2. Mochi\n3. Sago\n4. Oreos\n");
+
+                    int i = 1;
                     do
                     {
-                        if (ToppingCount == 5)
-                        {
-                            break;
-                        }
-                        topping = GetValidInput($"Topping {ToppingCount}:\nWhich topping do you wish to add? (Sprinkles, Mochi, Sago, Oreos, exit to finish): ", new List<string> { "sprinkles", "mochi", "sago", "oreos", "exit" });
+                        Dictionary<string, string> toppingDic = new Dictionary<string, string> { { "1", "sprinkles" }, { "2", "mochi" }, { "3", "sago" }, { "4", "oreos" }, { "0", "exit" } };
+                        string input = GetValidInput($"Topping {i}/4 (0 to finish): ", new List<string> { "1", "2", "3", "4", "0" });
+                        topping = toppingDic[input];
+
                         if (topping != "exit")
                         {
                             toppings.Add(new Topping(topping));
-                            toppingsWanted.Add(topping);
-
-                            Console.WriteLine();
-                            ToppingCount++;
+                            Console.WriteLine($"{topping.ToUpper()} ADDED!");
+                            i++;
                         }
-
                     }
-                    while (topping != "exit");
+                    while (topping != "exit" && i <= 4);
                 }
             }
 
+            Console.WriteLine("\nTypes of Ice Cream:");
+            Console.WriteLine("1. Cup\n2. Cone\n3. Waffle\n");
 
-            string type = GetValidInput("\nType of Ice Cream [waffle, cone, cup]: ", new List<string> { "waffle", "cone", "cup" });
+            string typeInput = GetValidInput("Select Type: ", new List<string> { "1", "2", "3" });
+            string type = "";
+
+            switch (typeInput)
+            {
+                case "1":
+                    type = "cup";
+                    break;
+                case "2":
+                    type = "cone";
+                    break;
+                case "3":
+                    type = "waffle";
+                    break;
+            }
+
             int scoops = GetNumberOfScoops();
             AddFlavors(scoops);
             AddToppings();
 
-
             if (type == "waffle")
             {
                 string waffleFlavor = "original";
-
-
-                string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no) ", new List<string> { "yes", "no" });
+                string waffleResponse = GetValidInput("Do you wish to change the flavor of your waffle? (yes / no): ", new List<string> { "yes", "no" });
                 if (waffleResponse == "yes")
                 {
-                    waffleFlavor = GetValidInput("Which flavor do u want? (Red velvet, charcoal, or pandan waffle): ", new List<string> { "red velvet", "charcoal", "pandan waffle" });
-
+                    Console.WriteLine("\n--------------------------------------------------");
+                    Console.WriteLine("Waffle Flavours:");
+                    Console.WriteLine("1. Red Velvet\n2. Charcoal\n3. Pandan\n");
+                    Dictionary<string, string> waffleDic = new Dictionary<string, string>() { { "1", "Red Velvet" }, { "2", "Charcoal" }, { "3", "Pandan" } };
+                    waffleFlavor = waffleDic[GetValidInput("Select Flavour From Above: ", new List<string> { "1", "2", "3" })];
                 }
-
-                Waffle newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
+                IceCream newOne = new Waffle(type, scoops, flavours, toppings, waffleFlavor);
                 IceCreamList[iceCream] = newOne;
             }
             else if (type == "cone")
             {
                 bool dipped = false;
-                string coneResponse = GetValidInput("Do you wish to dip your cone in chocolate? (yes / no) ", new List<string> { "yes", "no" });
+                string coneResponse = GetValidInput("Do you wish to dip your cone in chocolate? (yes / no): ", new List<string> { "yes", "no" });
                 if (coneResponse == "yes")
                 {
                     dipped = true;
-
                 }
-
-                Cone newOne = new Cone(type, scoops, flavours, toppings, dipped);
+                IceCream newOne = new Cone(type, scoops, flavours, toppings, dipped);
                 IceCreamList[iceCream] = newOne;
             }
             else if (type == "cup")
             {
-                Cup newOne = new Cup(type, scoops, flavours, toppings);
+                IceCream newOne = new Cup(type, scoops, flavours, toppings);
                 IceCreamList[iceCream] = newOne;
             }
+            Console.WriteLine("Ice cream modified successfully!");
+            Console.WriteLine("--------------------------------------------------");
         }
+    
 
         public override string ToString()
         {

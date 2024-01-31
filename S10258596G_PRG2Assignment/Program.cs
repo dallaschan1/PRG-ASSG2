@@ -935,9 +935,10 @@ namespace Assignment2
                     processCustomer.orderHistory.Add(processOrder);
                     processCustomer.currentOrder = new Order();
                     Console.WriteLine("\nPlease provide a review for each unique flavor of ice cream in your order:");
+                    List<Flavour> flavourHistory = new List<Flavour>();
                     foreach (IceCream iceCream in processOrder.IceCreamList)
                     {
-                        List<Flavour> flavourHistory = new List<Flavour>();
+                        
                         foreach (Flavour flavour in iceCream.Flavours)
                         {
                             if (flavourHistory.Contains(flavour))
@@ -959,6 +960,7 @@ namespace Assignment2
                                     reviewDic.Add(dicKey, new List<Review> { review });
                                 }
                                 reviewCat[flavour.Type].Add(review);
+                                flavourHistory.Add(flavour);
 
                                 string memberId = processCustomer.memberId.ToString().PadLeft(6, '0');
 
